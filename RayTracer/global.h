@@ -8,5 +8,6 @@
 #define MAX_WIDTH 1280
 #define MAX_HEIGHT 800
 #define INF_DISTANCE 100.0f
-#define SHAPE_COUNT 4
+#define SHAPE_COUNT 5
+#define SECT_MIN_DISTANCE 0.01f
 

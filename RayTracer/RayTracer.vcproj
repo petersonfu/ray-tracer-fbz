@@ -196,7 +196,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\ShapeLight.cpp"
+				RelativePath=".\ShapePlane.cpp"
 				>
 			</File>
 			<File
@@ -230,7 +230,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\ShapeLight.h"
+				RelativePath=".\ShapePlane.h"
 				>
 			</File>
 			<File

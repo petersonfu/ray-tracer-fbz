@@ -7,6 +7,7 @@
 
 struct CShapeBase
 {
+	CTuple3 m_origin;
 	CMaterial m_material;
 	bool m_light;
 	float m_refl_factor;
