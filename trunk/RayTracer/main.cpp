@@ -4,7 +4,7 @@
 #include "tuples.h"
 #include "ShapeBase.h"
 #include "ShapeSphere.h"
-#include "ShapeLight.h"
+#include "ShapePlane.h"
 
 
 char g_debugbuff[DBG_BUFF_LEN];
@@ -34,16 +34,24 @@ void init() {
 	g_use_tracer=true;
 	g_shapes=new CShapeBase* [SHAPE_COUNT];
 
-	g_shapes[0]=new CShapeSphere( 0.4,0.0,-1.2, 0.50,
-		CMaterial(CTuple3(1.0,0.0,0.0),CTuple3(0.5,0.0,0.0),CTuple3(1.0,0.0,0.0)),20.0, false);
-	g_shapes[1]=new CShapeSphere( -0.55,0.0, -1.2, 0.3,
-		CMaterial(CTuple3(0.0,1.0,1.0),CTuple3(0.0,1.0,1.0),CTuple3(0.0,1.0,1.0)),200.0, false);
+	g_shapes[0]=new CShapeSphere( CTuple3(0.1,0.0,-1.0),
+		CMaterial(CTuple3(1.0,0.0,0.0),CTuple3(1.0,0.0,0.0),CTuple3(1.0,0.0,0.0)),20.0, false,
+		0.50);
+	g_shapes[1]=new CShapeSphere( CTuple3(-0.55,0.0, -1.0), 
+		CMaterial(CTuple3(0.0,1.0,1.0),CTuple3(0.0,1.0,1.0),CTuple3(0.0,1.0,1.0)),200.0, false,
+		0.1);
 	g_shapes[2]=new CShapeSphere(
-		0,0.7,-1.0,0.05,
-		CMaterial(CTuple3(0.1,0.1,0.1),CTuple3(0.5,0.5,0.5),CTuple3(0.5,0.5,0.5)),1.0,true);//CTuple3(1.0,1.0,1.0),CTuple3(1.0,1.0,1.0)),1.0);
+		CTuple3(0.2,0.7,0.5),
+		CMaterial(CTuple3(0.1,0.1,0.1),CTuple3(0.5,0.5,0.5),CTuple3(0.5,0.5,0.5)),1.0,true,
+		0.001);
 	g_shapes[3]=new CShapeSphere(
-		0.2,-0.6,-1.0,0.02,
-		CMaterial(CTuple3(0.1,0.1,0.1),CTuple3(0.5,0.5,0.5),CTuple3(0.5,0.5,0.5)),1.0,true);//CTuple3(1.0,1.0,1.0),CTuple3(1.0,1.0,1.0)),1.0);
+		CTuple3(-0.2,0.6,-1.0),
+		CMaterial(CTuple3(0.1,0.1,0.1),CTuple3(0.5,0.5,0.5),CTuple3(0.5,0.5,0.5)),1.0,true,
+		0.001);
+	g_shapes[4]=new CShapePlane(
+		CTuple3(0,-3.0,-1.0),
+		CMaterial(CTuple3(0.0,0.5,0.0),CTuple3(0.0,0.5,0.0),CTuple3(0.0,0.5,0.0)),1.0,false,
+		CTuple3(0.0,1.0,0.0));
 
 		//Need to dispose here!!!!!!!!!!!!!!!
 	g_depth=1;
@@ -72,9 +80,6 @@ void display() {
 			{
 				for(j=0;j<g_width;j++)
 				{
-					//_snprintf(::g_debugbuff,DBG_BUFF_LEN,"%d %d\n",i,j);
-					//OutputDebugStringA(::g_debugbuff);
-
 					calcRay(j, i, view_point, view_ray);
 					RayTrace(view_ray, pixel_color, g_depth); //depth here
 					*(current_pixel++)=pixel_color.m_x;
