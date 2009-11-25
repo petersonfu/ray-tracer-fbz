@@ -26,7 +26,10 @@ bool CShapeSphere::intersect(CRay &view_ray,  CTuple3 &sect_point, float &sect_d
 	float d=d_vec.metric();
 	float sita=asin( this->m_radius/d );
 	//view_ray.GetDirection().normalize();
-	float sita1=acos(fabs(d_vec * view_ray.GetDirection()/d));
+	float product=d_vec * view_ray.GetDirection();
+	if(product<=0)
+		return false;
+	float sita1=acos(product/d);
 	if(sita>sita1)
 	{
 		float d1= d*sin(sita1);

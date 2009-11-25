@@ -17,4 +17,5 @@ struct CTuple3
 	void SetValue(float x,float y,float z);
 	float metric();
 	void normalize();
+	bool all_zero();
 };

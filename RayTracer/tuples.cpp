@@ -69,3 +69,8 @@ CTuple3& CTuple3::operator =(CTuple3& p)
 	this->m_z=p.m_z;
 	return *this;
 }
+
+bool CTuple3::all_zero()
+{
+	return ((m_x!=0.0) || (m_y!=0.0) || (m_z!=0.0));
+}

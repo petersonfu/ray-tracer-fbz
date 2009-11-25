@@ -8,8 +8,8 @@
 
 
 char g_debugbuff[DBG_BUFF_LEN];
-GLint g_width = 500;
-GLint g_height = 500;
+GLint g_width = 100;
+GLint g_height = 100;
 int g_depth;
 int g_refresh_count;
 float* g_pixels;
@@ -34,27 +34,33 @@ void init() {
 	g_use_tracer=true;
 	g_shapes=new CShapeBase* [SHAPE_COUNT];
 
-	g_shapes[0]=new CShapeSphere( CTuple3(0.1,0.0,-1.0),
-		CMaterial(CTuple3(1.0,0.0,0.0),CTuple3(1.0,0.0,0.0),CTuple3(1.0,0.0,0.0)),20.0, false,
-		0.50);
-	g_shapes[1]=new CShapeSphere( CTuple3(-0.55,0.0, -1.0), 
-		CMaterial(CTuple3(0.0,1.0,1.0),CTuple3(0.0,1.0,1.0),CTuple3(0.0,1.0,1.0)),200.0, false,
-		0.1);
+	g_shapes[0]=new CShapeSphere( CTuple3(0.0,0.0,-1.5),
+		CMaterial(CTuple3(1.0,1.0,1.0),CTuple3(1.0,1.0,1.0),CTuple3(1.0,1.0,1.0)),20.0, false,
+		0.30);
+	g_shapes[1]=new CShapeSphere( CTuple3(-0.4,-0.2, -1.0), 
+		CMaterial(CTuple3(0.0,1.0,0.0),CTuple3(0.0,1.0,0.0),CTuple3(0.0,1.0,0.0)),200.0, false,
+		0.2);
 	g_shapes[2]=new CShapeSphere(
-		CTuple3(0.2,0.7,0.5),
+		CTuple3(0.5,0.0,-0.5),
 		CMaterial(CTuple3(0.1,0.1,0.1),CTuple3(0.5,0.5,0.5),CTuple3(0.5,0.5,0.5)),1.0,true,
 		0.001);
 	g_shapes[3]=new CShapeSphere(
-		CTuple3(-0.2,0.6,-1.0),
+		CTuple3(-0.7,0.3,0.0),
 		CMaterial(CTuple3(0.1,0.1,0.1),CTuple3(0.5,0.5,0.5),CTuple3(0.5,0.5,0.5)),1.0,true,
 		0.001);
 	g_shapes[4]=new CShapePlane(
 		CTuple3(0,-3.0,-1.0),
-		CMaterial(CTuple3(0.0,0.5,0.0),CTuple3(0.0,0.5,0.0),CTuple3(0.0,0.5,0.0)),1.0,false,
-		CTuple3(0.0,1.0,0.0));
-
+		CMaterial(CTuple3(0.2,0.2,0.2),CTuple3(0.2,0.2,0.2),CTuple3(0.2,0.2,0.2)),1.0,false,
+		//CMaterial(CTuple3(0.0,0.0,0.0),CTuple3(0.0,0.0,0.0),CTuple3(0.0,0.0,0.0)),1.0,false,
+		CTuple3(0.0,1.0,1.0));
+	g_shapes[5]=new CShapeSphere( CTuple3(0.4,-0.2, -1.0), 
+		CMaterial(CTuple3(0.0,0.0,1.0),CTuple3(0.0,0.0,1.0),CTuple3(0.0,0.0,1.0)),200.0, false,
+		0.2);
+	g_shapes[6]=new CShapeSphere( CTuple3(0,0.5, -1.0), 
+		CMaterial(CTuple3(1.0,0.0,0.0),CTuple3(1.0,0.0,0.0),CTuple3(1.0,0.0,0.0)),200.0, false,
+		0.2);
 		//Need to dispose here!!!!!!!!!!!!!!!
-	g_depth=1;
+	g_depth=8;
 	g_refresh_count=0;
 	g_pixels=new float[3*MAX_WIDTH*MAX_HEIGHT];
 }

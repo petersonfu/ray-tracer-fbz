@@ -62,16 +62,23 @@ bool intersect(CRay view_ray, int &sect_shape, CTuple3 &sect_point)
 
 void RayTrace(CRay &view_ray, CTuple3& total_color, int depth)
 {
+	if(depth==0)
+	{
+		total_color.SetValue(0.0,0.0,0.0);
+		return;
+	}
+
 	int sect_shape, i;
-	CTuple3 color(0.0,0.0,0.0);
+	CTuple3 color(0.0,0.0,0.0),rcolor;
 	CTuple3 vlight, vsect;
 	CTuple3 sect_point(0.0,0.0,0.0);
 	CTuple3 l,n,r,v;
-	CRay shadow_ray;
+	CRay shadow_ray,rray;
 	int shadow_shape;
 	CTuple3 shadow_point;
 	float shadow_distance;
 	float product;
+	bool has_ambient, has_diffuse, has_reflect;
 	int shape_count=SHAPE_COUNT;
 	if( intersect(view_ray,sect_shape,sect_point))
 	{
@@ -89,10 +96,12 @@ void RayTrace(CRay &view_ray, CTuple3& total_color, int depth)
 			{
 				if(g_shapes[i]->m_light)
 				{
+#ifdef ENABLE_AMBIENT
 					//calculate the ambient light
 					vlight = g_shapes[i]->m_material.m_ambient;
 					vsect  = g_shapes[sect_shape]->m_material.m_ambient;
 					color = color + (vlight & vsect);
+#endif
 					
 					//calculate the view plane
 					g_shapes[sect_shape]->calcPlane(g_shapes[i]->m_origin,view_ray.m_origin,sect_point,l,n,r,v);
@@ -107,8 +116,7 @@ void RayTrace(CRay &view_ray, CTuple3& total_color, int depth)
 						if(shadow_distance<(g_shapes[i]->m_origin - sect_point).metric())
 							continue;
 					}
-
-					
+#ifdef ENABLE_DIFFUSE
 					//calculate the diffuse light
 					vlight = g_shapes[i]->m_material.m_diffuse;
 					vsect  = g_shapes[sect_shape]->m_material.m_diffuse;
@@ -116,13 +124,22 @@ void RayTrace(CRay &view_ray, CTuple3& total_color, int depth)
 					if(product>0)
 						color = color + (vlight & ( vsect * product));
 					
+#endif
 
+#ifdef ENABLE_REFLECT
 					//calculate the reflected light
 					vlight = g_shapes[i]->m_material.m_reflect;
 					vsect  = g_shapes[sect_shape]->m_material.m_reflect;
 					product=r*v;
 					if(product>0)
 						color = color + (vlight & ( vsect * (pow(product, g_shapes[sect_shape]->m_refl_factor))));
+					
+					//calculate the reflect 
+					rray.SetOrigin(sect_point);
+					rray.SetDirection(r);
+					RayTrace(rray,rcolor,depth-1);
+					color = color + (rcolor & vsect);
+#endif
 				}
 			}
 		}
