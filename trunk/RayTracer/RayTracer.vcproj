@@ -194,6 +194,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\SetupScene.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\ShapeBase.cpp"
 				>
 			</File>

@@ -8,14 +8,21 @@
 
 
 char g_debugbuff[DBG_BUFF_LEN];
-GLint g_width = 100;
-GLint g_height = 100;
+GLint g_width = 600;
+GLint g_height = 600;
 int g_depth;
 int g_refresh_count;
 float* g_pixels;
-bool g_use_tracer=true;
+bool g_use_tracer;
 CShapeBase** g_shapes;
-
+int g_shape_count;
+CTuple3 g_att_reflect(0.2,0.2,0.2), g_att_refract(1.0,1.0,1.0);//1.0,1.0,1.0
+void init_scene1();
+void init_scene2();
+void init_scene3();
+void init_scene4();
+void init_scene5();
+void init_scene6();
 /* Prototypes */
 void init();
 void display();
@@ -27,39 +34,22 @@ void RayTrace(CRay &view_ray, CTuple3& color, int depth);
 void calcRay(int screen_x, int screen_y, CTuple3 view_point, CRay& view_ray);
 
 
+
 void init() {
 	glShadeModel( GL_FLAT );
 	glClearColor( 0.0, 0.0, 0.0, 1.0 );
 
 	g_use_tracer=true;
-	g_shapes=new CShapeBase* [SHAPE_COUNT];
+	g_shapes=new CShapeBase * [SHAPE_COUNT];
 
-	g_shapes[0]=new CShapeSphere( CTuple3(0.0,0.0,-1.5),
-		CMaterial(CTuple3(1.0,1.0,1.0),CTuple3(1.0,1.0,1.0),CTuple3(1.0,1.0,1.0)),20.0, false,
-		0.30);
-	g_shapes[1]=new CShapeSphere( CTuple3(-0.4,-0.2, -1.0), 
-		CMaterial(CTuple3(0.0,1.0,0.0),CTuple3(0.0,1.0,0.0),CTuple3(0.0,1.0,0.0)),200.0, false,
-		0.2);
-	g_shapes[2]=new CShapeSphere(
-		CTuple3(0.5,0.0,-0.5),
-		CMaterial(CTuple3(0.1,0.1,0.1),CTuple3(0.5,0.5,0.5),CTuple3(0.5,0.5,0.5)),1.0,true,
-		0.001);
-	g_shapes[3]=new CShapeSphere(
-		CTuple3(-0.7,0.3,0.0),
-		CMaterial(CTuple3(0.1,0.1,0.1),CTuple3(0.5,0.5,0.5),CTuple3(0.5,0.5,0.5)),1.0,true,
-		0.001);
-	g_shapes[4]=new CShapePlane(
-		CTuple3(0,-3.0,-1.0),
-		CMaterial(CTuple3(0.2,0.2,0.2),CTuple3(0.2,0.2,0.2),CTuple3(0.2,0.2,0.2)),1.0,false,
-		//CMaterial(CTuple3(0.0,0.0,0.0),CTuple3(0.0,0.0,0.0),CTuple3(0.0,0.0,0.0)),1.0,false,
-		CTuple3(0.0,1.0,1.0));
-	g_shapes[5]=new CShapeSphere( CTuple3(0.4,-0.2, -1.0), 
-		CMaterial(CTuple3(0.0,0.0,1.0),CTuple3(0.0,0.0,1.0),CTuple3(0.0,0.0,1.0)),200.0, false,
-		0.2);
-	g_shapes[6]=new CShapeSphere( CTuple3(0,0.5, -1.0), 
-		CMaterial(CTuple3(1.0,0.0,0.0),CTuple3(1.0,0.0,0.0),CTuple3(1.0,0.0,0.0)),200.0, false,
-		0.2);
+	g_shape_count=0;
+
+	init_scene6();
 		//Need to dispose here!!!!!!!!!!!!!!!
+
+	_snprintf(::g_debugbuff,DBG_BUFF_LEN,"%d shapes.\n",g_shape_count);
+	OutputDebugStringA(::g_debugbuff);
+
 	g_depth=8;
 	g_refresh_count=0;
 	g_pixels=new float[3*MAX_WIDTH*MAX_HEIGHT];
@@ -82,6 +72,13 @@ void display() {
 		if(g_refresh_count==0)
 		{
 			int nPretimer = GetTickCount();
+#ifdef DBG_SPECIAL
+			calcRay(150, 150, view_point, view_ray);
+			RayTrace(view_ray, pixel_color, g_depth); //depth here
+				*(current_pixel++)=pixel_color.m_x;
+				*(current_pixel++)=pixel_color.m_y;
+				*(current_pixel++)=pixel_color.m_z;
+#else
 			for(i=0;i<g_height;i++)
 			{
 				for(j=0;j<g_width;j++)
@@ -93,6 +90,7 @@ void display() {
 					*(current_pixel++)=pixel_color.m_z;
 				}
 			}
+#endif
 			_snprintf(::g_debugbuff,DBG_BUFF_LEN,"Execution time: %d ms, %d*%d.\n",GetTickCount() - nPretimer, g_width, g_height);
 			OutputDebugStringA(::g_debugbuff);
 		}
@@ -142,7 +140,7 @@ void display() {
 /* Draw the objects */
 void draw() {
 	int i;
-	for(i=0;i<SHAPE_COUNT;i++)
+	for(i=0;i<g_shape_count;i++)
 	{
 		g_shapes[i]->drawByGlut();
 	}

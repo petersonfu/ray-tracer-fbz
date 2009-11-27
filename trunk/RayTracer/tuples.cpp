@@ -72,5 +72,18 @@ CTuple3& CTuple3::operator =(CTuple3& p)
 
 bool CTuple3::all_zero()
 {
-	return ((m_x!=0.0) || (m_y!=0.0) || (m_z!=0.0));
+	return ((m_x==0.0) && (m_y==0.0) && (m_z==0.0));
+}
+
+CTuple3 CTuple3::find_face()
+{
+	CTuple3 result;
+	if(m_x==0.0)
+		result.SetValue(0,-m_z,m_y);
+	else if (m_y==0.0)
+		result.SetValue(-m_z,0,m_x);
+	else
+		result.SetValue(-m_y,m_x,0);
+	result.normalize();
+	return result;
 }

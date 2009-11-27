@@ -18,4 +18,5 @@ struct CTuple3
 	float metric();
 	void normalize();
 	bool all_zero();
+	CTuple3 find_face();
 };
