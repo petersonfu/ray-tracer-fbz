@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __RAY_H__
+#define __RAY_H__
 
 #include "tuples.h"
 
@@ -14,13 +15,14 @@ struct CRay
 
 	CTuple3& GetOrigin() {return m_origin;}
 	CTuple3& GetDirection() {return m_direction;}
-	void SetOrigin(CTuple3 &origin)
+	void SetOrigin(CTuple3 origin)
 	{
 		m_origin=origin;
 	}
 
-	void SetDirection(CTuple3 &direction)
+	void SetDirection(CTuple3 direction)
 	{
 		m_direction=direction;
 	}
 };
+#endif

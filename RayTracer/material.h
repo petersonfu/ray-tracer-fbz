@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __MATERIAL_H__
+#define __MATERIAL_H__
 
 #include "global.h"
 #include "ray.h"
@@ -16,3 +17,5 @@ struct CMaterial
 	CMaterial(CTuple3 amb, CTuple3 diff,  CTuple3 refl, CTuple3 refr);
 	CMaterial& operator =(CMaterial& p);
 };
+
+#endif

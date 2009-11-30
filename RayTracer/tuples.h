@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __TUPLES_H__
+#define __TUPLES_H__
 #include "math.h"
 
 struct CTuple3
@@ -12,7 +13,7 @@ struct CTuple3
 	CTuple3 operator + (const CTuple3 &add);
 	float operator * (const CTuple3 &product);
 	CTuple3 operator * (const float &re);
-	CTuple3& operator =(CTuple3& p);
+	CTuple3& operator = (const CTuple3& p);
 	CTuple3 operator & (const CTuple3& p);
 	void SetValue(float x,float y,float z);
 	float metric();
@@ -20,3 +21,4 @@ struct CTuple3
 	bool all_zero();
 	CTuple3 find_face();
 };
+#endif
