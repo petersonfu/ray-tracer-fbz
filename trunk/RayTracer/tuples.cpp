@@ -62,7 +62,7 @@ void CTuple3::normalize()
 	m_z=m_z*met;
 }
 
-CTuple3& CTuple3::operator =(CTuple3& p)
+CTuple3& CTuple3::operator = (const CTuple3& p)
 {
 	this->m_x=p.m_x;
 	this->m_y=p.m_y;

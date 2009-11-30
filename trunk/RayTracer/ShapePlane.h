@@ -1,4 +1,6 @@
-#pragma once
+#ifndef __SHAPEPLANE_H__
+#define __SHAPEPLANE_H__
+
 #include "shapebase.h"
 #include "tuples.h"
 
@@ -15,3 +17,4 @@ struct CShapePlane :
 	virtual void calcPlane( CTuple3 cpoint, CTuple3& normal);
 	virtual float calcDistance ( CTuple3 point );
 };
+#endif

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __SHAPESPHERE_H__
+#define __SHAPESPHERE_H__
 #include "shapebase.h"
 #include "tuples.h"
 #include "ray.h"
@@ -16,3 +17,4 @@ struct CShapeSphere :
 	virtual void calcPlane( CTuple3 cpoint, CTuple3& normal);
 	virtual float calcDistance ( CTuple3 point );
 };
+#endif

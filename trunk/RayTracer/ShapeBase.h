@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __SHAPE_BASE_H__
+#define __SHAPE_BASE_H__
 
 #include "global.h"
 #include "ray.h"
@@ -23,4 +24,5 @@ struct CShapeBase
 	virtual float calcDistance ( CTuple3 point )=0;
 };
 
+#endif
 
