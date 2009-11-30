@@ -17,7 +17,8 @@ void init_scene2()
 		CMaterial(CTuple3(1.0,0.0,0.0),CTuple3(1.0,0.0,0.0),CTuple3(1.0,0.0,0.0),CTuple3(0.0,0.0,0.0)),20.0, false,
 		1.0,1.0,
 		0.50);
-	g_shapes[g_shape_count++]=new CShapeSphere( CTuple3(-0.55,0.0, -1.0),		CMaterial(CTuple3(0.0,1.0,1.0),CTuple3(0.0,1.0,1.0),CTuple3(0.0,1.0,1.0),CTuple3(0.0,0.0,0.0)),200.0, false,
+	g_shapes[g_shape_count++]=new CShapeSphere( CTuple3(-0.55,0.0, -1.0),
+		CMaterial(CTuple3(0.0,1.0,1.0),CTuple3(0.0,1.0,1.0),CTuple3(0.0,1.0,1.0),CTuple3(0.0,0.0,0.0)),200.0, false,
 		1.0,1.0,
 		0.1);
 	g_shapes[g_shape_count++]=new CShapeSphere(
