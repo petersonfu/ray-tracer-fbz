@@ -20,5 +20,6 @@ struct CTuple3
 	void normalize();
 	bool all_zero();
 	CTuple3 find_face();
+	void reset_threshold(float threshold);
 };
 #endif

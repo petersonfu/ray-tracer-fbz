@@ -9,6 +9,16 @@ extern int g_shape_count;
 
 void init_scene1()
 {
+	g_shapes[g_shape_count++]=new CShapeSphere( CTuple3(0.0,0.0, -1.0), 
+		CMaterial(CTuple3(1.0,1.0,1.0),CTuple3(0.1,0.1,0.1),CTuple3(0.1,0.1,0.1),CTuple3(1.0,1.0,1.0)),200.0, false,
+		1.3,1.0,
+		0.5);
+	
+	g_shapes[g_shape_count++]=new CShapeSphere(
+		CTuple3(0.0,0.0,-1.5),
+		CMaterial(CTuple3(0.0,0.0,0.0),CTuple3(1.0,1.0,1.0),CTuple3(1.0,1.0,1.0),CTuple3(1.0,1.0,1.0)),0.0,true,
+		1.0,1.0,
+		0.001);
 }
 void init_scene2()
 {
@@ -22,20 +32,22 @@ void init_scene2()
 		1.0,1.0,
 		0.1);
 	g_shapes[g_shape_count++]=new CShapeSphere(
-		CTuple3(0.2,0.7,0.5),
+		CTuple3(0.2,0.7,-0.5),
 		CMaterial(CTuple3(0.1,0.1,0.1),CTuple3(0.5,0.5,0.5),CTuple3(0.5,0.5,0.5),CTuple3(0.0,0.0,0.0)),1.0,true,
 		1.0,1.0,
-		0.001);
+		0.01);
 	g_shapes[g_shape_count++]=new CShapeSphere(
-		CTuple3(-0.2,0.6,-1.0),
+		CTuple3(-0.2,-0.6,-1.0),
 		CMaterial(CTuple3(0.1,0.1,0.1),CTuple3(0.5,0.5,0.5),CTuple3(0.5,0.5,0.5),CTuple3(0.0,0.0,0.0)),1.0,true,
 		1.0,1.0,
-		0.001);
+		0.01);
+	/*
 	g_shapes[g_shape_count++]=new CShapePlane(
 		CTuple3(0,-3.0,-1.0),
 		CMaterial(CTuple3(0.0,0.5,0.0),CTuple3(0.0,0.5,0.0),CTuple3(0.0,0.5,0.0),CTuple3(0.0,0.0,0.0)),1.0,false,
 		1.0,1.0,
 		CTuple3(0.0,1.0,0.0));
+		*/
 
 }
 
@@ -56,12 +68,12 @@ void init_scene3()
 		CTuple3(0.5,0.0,-0.5),
 		CMaterial(CTuple3(0.1,0.1,0.1),CTuple3(0.5,0.5,0.5),CTuple3(0.5,0.5,0.5),CTuple3(0.0,0.0,0.0)),1.0,true,
 		1.0,1.0,
-		0.001);
+		0.01);
 	g_shapes[g_shape_count++]=new CShapeSphere(
 		CTuple3(-0.7,0.3,0.0),
 		CMaterial(CTuple3(0.1,0.1,0.1),CTuple3(0.5,0.5,0.5),CTuple3(0.5,0.5,0.5),CTuple3(0.0,0.0,0.0)),1.0,true,
 		1.0,1.0,
-		0.001);
+		0.01);
 	g_shapes[g_shape_count++]=new CShapePlane(
 		CTuple3(0,-3.0,-1.0),
 		CMaterial(CTuple3(0.2,0.2,0.2),CTuple3(0.2,0.2,0.2),CTuple3(0.2,0.2,0.2),CTuple3(0.0,0.0,0.0)),1.0,false,
@@ -87,10 +99,10 @@ void init_scene3()
 void init_scene4()
 {
 	g_shapes[g_shape_count++]=new CShapeSphere(
-		CTuple3(-0.0,-0.0,-0.5),
-		CMaterial(CTuple3(0.1,0.1,0.1),CTuple3(1.0,1.0,1.0),CTuple3(1.0,1.0,1.0),CTuple3(0.0,0.0,0.0)),1.0,true,
+		CTuple3(-0.5,-0.5,-0.5),
+		CMaterial(CTuple3(0.2,0.2,0.2),CTuple3(1.0,1.0,1.0),CTuple3(1.0,1.0,1.0),CTuple3(0.0,0.0,0.0)),1.0,true,
 		1.0,1.0,
-		0.001);
+		0.01);
 	/*g_shapes[g_shape_count++]=new CShapeSphere(
 		CTuple3(-0.7,0.3,0.0),
 		CMaterial(CTuple3(0.1,0.1,0.1),CTuple3(0.5,0.5,0.5),CTuple3(0.5,0.5,0.5)),1.0,true,
@@ -100,7 +112,7 @@ void init_scene4()
 	
 	g_shapes[g_shape_count++]=new CShapePlane(
 		CTuple3(0.0,0.0,-2.0),
-		CMaterial(CTuple3(0.2,0.0,0.0),CTuple3(0.2,0.0,0.0),CTuple3(0.2,0.0,0.0),CTuple3(0.2,0.0,0.0)),1.0,false,
+		CMaterial(CTuple3(1.0,0.0,0.0),CTuple3(1.0,0.0,0.0),CTuple3(1.0,0.0,0.0),CTuple3(0.0,0.0,0.0)),1.0,false,
 		//CMaterial(CTuple3(0.0,0.0,0.0),CTuple3(0.0,0.0,0.0),CTuple3(0.0,0.0,0.0)),1.0,false,
 		1.0,1.0,
 		CTuple3(0.0,0.0,1.0));
@@ -114,8 +126,8 @@ void init_scene4()
 	
 	g_shapes[g_shape_count++]=new CShapeSphere( 
 		CTuple3(0.0,0.0, -1.0), 
-		CMaterial(CTuple3(0.0,0.0,0.0),CTuple3(0.5,0.5,0.5),CTuple3(0.5,0.5,0.5),CTuple3(1.0,1.0,1.0)),200.0, false,
-		1.5,1.0,
+		CMaterial(CTuple3(0.1,0.1,0.1),CTuple3(0.1,0.1,0.1),CTuple3(0.1,0.1,0.1),CTuple3(1.0,1.0,1.0)),200.0, false,
+		1.3,1.0,
 		0.3);
 	
 	
@@ -130,51 +142,40 @@ void init_scene4()
 
 void init_scene5()
 {
-	/*g_shapes[g_shape_count++]=new CShapePlane(
-		CTuple3(0.0,0.0,-3.0),
-		CMaterial(CTuple3(0.0,0.0,0.0),CTuple3(0.0,0.0,1.0),CTuple3(0.0,0.0,1.0),CTuple3(0.0,0.0,0.0)),1.0,false,
+	
+	g_shapes[g_shape_count++]=new CShapePlane(
+		CTuple3(0.0,0.0,-1.50),
+		CMaterial(CTuple3(0.0,1.0,1.0),CTuple3(0.0,0.5,0.5),CTuple3(0.0,0.5,0.5),CTuple3(0.0,0.5,0.5)),200.0,false,
 		1.0,1.0,
-		CTuple3(0.0,0.0,1.0));
-		*/
+		CTuple3(0.0,1.0,1.0));
+	
+
 	
 	g_shapes[g_shape_count++]=new CShapeSphere( CTuple3(0.0,0.0, -1.0), 
-		CMaterial(CTuple3(0.0,0.0,0.0),CTuple3(0.5,0.5,0.0),CTuple3(1.0,1.0,0.0),CTuple3(1.0,0.0,0.0)),200.0, false,
-		1.0,1.0,
+		CMaterial(CTuple3(0.0,0.0,0.0),CTuple3(0.2,0.2,0.2),CTuple3(0.2,0.2,0.2),CTuple3(1.0,1.0,1.0)),20.0, false,
+		1.1,1.0,
 		0.3);
+	
 	
 	g_shapes[g_shape_count++]=new CShapeSphere( CTuple3(0.0,0.0, -1.0), 
 		//CMaterial(CTuple3(0.0,0.0,0.0),CTuple3(0.2,0.2,0.2),CTuple3(0.2,0.2,0.2),CTuple3(1.0,1.0,1.0)),200.0, false,
-		CMaterial(CTuple3(0.0,0.0,0.0),CTuple3(0.0,0.0,0.0),CTuple3(0.0,0.0,0.0),CTuple3(1.0,1.0,0.00)),200.0, false,
+		CMaterial(CTuple3(0.0,0.0,0.0),CTuple3(2.0,0.0,0.0),CTuple3(2.0,0.0,0.0),CTuple3(0.0,0.0,0.00)),200.0, false,
 		1.0,1.0,
-		0.5);
+		0.1);
 		
-/*
-	g_shapes[g_shape_count++]=new CShapePlane(
-		CTuple3(0.0,0.0,-1.0),
-		CMaterial(CTuple3(0.0,0.0,0.0),CTuple3(0.0,0.0,0.0),CTuple3(0.0,0.0,0.0),CTuple3(1.0,1.0,1.0)),1.0,false,
-		//CMaterial(CTuple3(0.0,0.0,0.0),CTuple3(0.0,0.0,0.0),CTuple3(0.0,0.0,0.0)),1.0,false,
-		1.0,1.0,
-		CTuple3(0.0,0.0,1.0));
-	g_shapes[g_shape_count++]=new CShapePlane(
-		CTuple3(0.0,0.0,-1.1),
-		CMaterial(CTuple3(0.0,0.0,0.0),CTuple3(0.0,0.0,0.0),CTuple3(0.0,0.0,0.0),CTuple3(1.0,1.0,1.0)),1.0,false,
-		//CMaterial(CTuple3(0.0,0.0,0.0),CTuple3(0.0,0.0,0.0),CTuple3(0.0,0.0,0.0)),1.0,false,
-		1.0,1.0,
-		CTuple3(0.0,0.0,-1.0));
-*/
 
-	g_shapes[g_shape_count++]=new CShapePlane(
-		CTuple3(0.0,0.0,-2.0),
+	/*g_shapes[g_shape_count++]=new CShapePlane(
+		CTuple3(0.0,0.0,2.0),
 		CMaterial(CTuple3(0.1,0.1,0.1),CTuple3(1.0,1.0,1.0),CTuple3(1.0,1.0,1.0),CTuple3(1.0,1.0,1.0)),1.0,true,
 		//CMaterial(CTuple3(0.0,0.0,0.0),CTuple3(0.0,0.0,0.0),CTuple3(0.0,0.0,0.0)),1.0,false,
 		1.0,1.0,
-		CTuple3(0.0,-0.0,1.0));
-	/*g_shapes[g_shape_count++]=new CShapeSphere(
-		CTuple3(0.0,0.0,-2.0),
-		CMaterial(CTuple3(0.0,0.0,0.0),CTuple3(1.0,1.0,1.0),CTuple3(1.0,1.0,1.0),CTuple3(0.0,0.0,0.0)),0.0,true,
+		CTuple3(0.0,0.0,-1.0));*/
+	g_shapes[g_shape_count++]=new CShapeSphere(
+		CTuple3(0.5,0.5,-0.5),
+		CMaterial(CTuple3(0.5,0.5,0.5),CTuple3(1.0,1.0,1.0),CTuple3(1.0,1.0,1.0),CTuple3(0.5,0.5,0.5)),0.0,true,
 		1.0,1.0,
-		0.1);
-		*/
+		0.01);
+		
 		
 	
 }
@@ -200,7 +201,7 @@ void init_scene6()
 	
 	g_shapes[g_shape_count++]=new CShapePlane(
 		CTuple3(-3.0,0.0,-3.0),
-		CMaterial(CTuple3(0.2,0.0,0.2),CTuple3(0.2,0.0,0.2),CTuple3(0.2,0.0,0.2),CTuple3(0.2,0.0,0.2)),1.0,false,
+		CMaterial(CTuple3(0.2,0.0,0.2),CTuple3(0.2,0.0,0.2),CTuple3(0.2,0.0,0.2),CTuple3(0.0,0.0,0.0)),1.0,false,
 		//CMaterial(CTuple3(0.0,0.0,0.0),CTuple3(0.0,0.0,0.0),CTuple3(0.0,0.0,0.0)),1.0,false,
 		1.0,1.0,
 		CTuple3(0.2,0.0,1.0));
@@ -220,13 +221,13 @@ void init_scene6()
 	
 	g_shapes[g_shape_count++]=new CShapeSphere( 
 		CTuple3(0.8,0.2, -2.0), 
-		CMaterial(CTuple3(0.0,0.0,0.0),CTuple3(0.1,0.1,0.1),CTuple3(0.1,0.1,0.1),CTuple3(1.0,1.0,1.0)),200.0, false,
-		1.2,1.0,
+		CMaterial(CTuple3(0.0,0.0,0.0),CTuple3(0.2,0.2,0.2),CTuple3(0.2,0.2,0.2),CTuple3(2.0,2.0,2.0)),200.0, false,
+		1.1,1.0,
 		0.3);
 	
 	g_shapes[g_shape_count++]=new CShapeSphere( 
 		CTuple3(-0.15,-0.25, -2.0), 
-		CMaterial(CTuple3(0.0,0.0,0.0),CTuple3(0.1,0.1,0.1),CTuple3(0.1,0.1,0.1),CTuple3(1.0,1.0,1.0)),200.0, false,
+		CMaterial(CTuple3(0.0,0.0,0.0),CTuple3(0.2,0.2,0.2),CTuple3(0.2,0.2,0.2),CTuple3(2.0,2.0,2.0)),200.0, false,
 		1.1,1.0,
 		0.5);
 	int odd=false;
@@ -247,4 +248,32 @@ void init_scene6()
 			odd=!odd;
 		}
 	}
+}
+void init_scene7()
+{
+	
+	g_shapes[g_shape_count++]=new CShapeSphere( CTuple3(0.1,0.0,-1.0),
+		CMaterial(CTuple3(0.1,0.1,0.1),CTuple3(0.1,0.1,0.1),CTuple3(0.1,0.1,0.1),CTuple3(1.0,1.0,1.0)),20.0, false,
+		1.33,1.0,
+		0.50);
+	g_shapes[g_shape_count++]=new CShapeSphere( CTuple3(-0.4,0.0, -1.8),
+		CMaterial(CTuple3(0.0,1.0,1.0),CTuple3(0.0,1.0,1.0),CTuple3(0.0,1.0,1.0),CTuple3(0.0,0.0,0.0)),200.0, false,
+		1.0,1.0,
+		0.1);
+	g_shapes[g_shape_count++]=new CShapeSphere(
+		CTuple3(0.2,0.7,-0.5),
+		CMaterial(CTuple3(0.1,0.1,0.1),CTuple3(0.5,0.5,0.5),CTuple3(0.5,0.5,0.5),CTuple3(0.0,0.0,0.0)),1.0,true,
+		1.0,1.0,
+		0.01);
+	g_shapes[g_shape_count++]=new CShapeSphere(
+		CTuple3(-0.2,0.6,-1.0),
+		CMaterial(CTuple3(0.1,0.1,0.1),CTuple3(0.5,0.5,0.5),CTuple3(0.5,0.5,0.5),CTuple3(0.0,0.0,0.0)),1.0,true,
+		1.0,1.0,
+		0.01);
+	g_shapes[g_shape_count++]=new CShapePlane(
+		CTuple3(0,-3.0,-1.0),
+		CMaterial(CTuple3(0.0,0.5,0.0),CTuple3(0.0,0.5,0.0),CTuple3(0.0,0.5,0.0),CTuple3(0.0,0.0,0.0)),1.0,false,
+		1.0,1.0,
+		CTuple3(0.0,1.0,1.0));
+
 }

@@ -16,13 +16,15 @@ float* g_pixels;
 bool g_use_tracer;
 CShapeBase** g_shapes;
 int g_shape_count;
-CTuple3 g_att_reflect(0.2,0.2,0.2), g_att_refract(1.0,1.0,1.0);//1.0,1.0,1.0
+float g_att_refl=0.5,g_att_refr=1.0;
+CTuple3 g_att_reflect(g_att_refl,g_att_refl,g_att_refl), g_att_refract(g_att_refr,g_att_refr,g_att_refr);//1.0,1.0,1.0
 void init_scene1();
 void init_scene2();
 void init_scene3();
 void init_scene4();
 void init_scene5();
 void init_scene6();
+void init_scene7();
 /* Prototypes */
 void init();
 void display();
@@ -44,7 +46,7 @@ void init() {
 
 	g_shape_count=0;
 
-	init_scene6();
+	init_scene4();
 		//Need to dispose here!!!!!!!!!!!!!!!
 
 	_snprintf(::g_debugbuff,DBG_BUFF_LEN,"%d shapes.\n",g_shape_count);
