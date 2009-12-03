@@ -12,6 +12,8 @@ float current_x;
 float current_y;
 extern int g_shape_count;
 extern CTuple3 g_att_reflect, g_att_refract;
+extern float sqrt(float x);
+
 //we suppose the view angle is 90 degrees and the project screen with z=-1.0f . screen has an area of +-1.0*+-1.0
 void calcRay(int screen_x, int screen_y, CTuple3 view_point, CRay& view_ray)
 {
@@ -225,9 +227,9 @@ void RayTrace(CRay &view_ray, CTuple3& total_color, int depth)
 						break;
 					case 0:
 
-/*						if(g_shapes[sect_shape]->m_material.m_reflect.all_zero())
+						if(g_shapes[sect_shape]->m_material.m_reflect.all_zero())
 							continue;
-*/
+
 						vlight = g_shapes[i]->m_material.m_reflect;
 						vsect = g_shapes[sect_shape]->m_material.m_reflect;
 						color=color + ( ( vlight & vsect) * ( n * l) );

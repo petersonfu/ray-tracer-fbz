@@ -1,5 +1,7 @@
 #include "tuples.h"
 #include "global.h"
+extern float CarmSqrt(float x);
+
 CTuple3::CTuple3(void)
 {
 }
@@ -68,9 +70,9 @@ void CTuple3::normalize()
 	if(a==0.0)
 		return;
 	float met=(1/a);
-	m_x=m_x*met;
-	m_y=m_y*met;
-	m_z=m_z*met;
+	m_x = m_x * met;
+	m_y = m_y * met;
+	m_z = m_z * met;
 }
 
 CTuple3& CTuple3::operator = (const CTuple3& p)
