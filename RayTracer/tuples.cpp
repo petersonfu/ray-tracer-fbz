@@ -1,5 +1,5 @@
 #include "tuples.h"
-
+#include "global.h"
 CTuple3::CTuple3(void)
 {
 }
@@ -56,7 +56,18 @@ void CTuple3::SetValue(float x,float y,float z)
 
 void CTuple3::normalize()
 {
-	float met=(1/metric());
+	/*
+	if(fabs(m_x)<IGNORE_DELTA_DISTANCE)
+		m_x=0.0f;
+	if(fabs(m_y)<IGNORE_DELTA_DISTANCE)
+		m_y=0.0f;
+	if(fabs(m_z)<IGNORE_DELTA_DISTANCE)
+		m_z=0.0f;
+	*/
+	float a=metric();
+	if(a==0.0)
+		return;
+	float met=(1/a);
 	m_x=m_x*met;
 	m_y=m_y*met;
 	m_z=m_z*met;
@@ -86,4 +97,14 @@ CTuple3 CTuple3::find_face()
 		result.SetValue(-m_y,m_x,0);
 	result.normalize();
 	return result;
+}
+
+void CTuple3::reset_threshold(float threshold)
+{
+	if(m_x>threshold)
+		m_x=threshold;
+	if(m_y>threshold)
+		m_y=threshold;
+	if(m_z>threshold)
+		m_z=threshold;
 }

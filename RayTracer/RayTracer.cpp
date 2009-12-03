@@ -19,11 +19,15 @@ void calcRay(int screen_x, int screen_y, CTuple3 view_point, CRay& view_ray)
 	float yfloat= -1.0 + (float)screen_y/(float)g_width * 2.0;
 	current_x=xfloat;
 	current_y=yfloat;
-
+#ifndef PLANE_PROJECTION
 	CTuple3 dir(xfloat-view_point.m_x,yfloat-view_point.m_y,-1.0-view_point.m_z);
 	dir.normalize();
 	view_ray.SetOrigin(view_point);
 	view_ray.SetDirection(dir);
+#else
+	view_ray.SetOrigin(CTuple3(xfloat,yfloat,view_point.m_z));
+	view_ray.SetDirection(CTuple3(0,0,-1.0-view_point.m_z));
+#endif
 }
 
 //check intersect
@@ -63,12 +67,20 @@ int intersect(CRay view_ray, int &sect_shape, CTuple3 &sect_point)
 	}
 }
 
-bool shadow_intersect(CRay shadow_ray, int light)
+/*
+returns:
+1 if intersected;
+0 if not at all intersected;
+-1 if intersected by a transparent primitive and saves the the hall_factor of this primitive.
+*/
+int shadow_intersect(CRay shadow_ray, int start_shape, int light, CTuple3 &hall_factor)
 {
 	int i;
+	bool find_trans=false;
 	float source_distance = g_shapes[light]->calcDistance(shadow_ray.m_origin);
 	int result;
 	CTuple3 point;
+	CTuple3 refr_factor;
 	float distance;
 	int shape_count=g_shape_count;
 	for(i=0;i<shape_count;i++)
@@ -79,11 +91,25 @@ bool shadow_intersect(CRay shadow_ray, int light)
 		{
 			if(distance < source_distance)// && distance>SECT_MIN_DISTANCE)
 			{
-				return true;
+				if(start_shape!=i || result==1)
+					return 1;
+				refr_factor = g_shapes[i]->m_material.m_refract;
+				if(refr_factor.all_zero())
+					return 1;
+				else if(find_trans) //has been intersected by another transparent primitive
+					return 1;
+				else
+				{
+					find_trans=true;
+					hall_factor=refr_factor;
+				}				
 			}
 		}
 	}
-	return false;
+	if(find_trans)
+		return -1;
+	else
+		return 0;
 }
 
 void RayTrace(CRay &view_ray, CTuple3& total_color, int depth)
@@ -94,17 +120,17 @@ void RayTrace(CRay &view_ray, CTuple3& total_color, int depth)
 		return;
 	}
 
-	int sect_shape, i, result;
+	int sect_shape, i, result, shadow_result;
 	CTuple3 color(0.0,0.0,0.0),rcolor,tcolor;
 	CTuple3 vlight, vsect;
 	CTuple3 sect_point(0.0,0.0,0.0);
-	CTuple3 l,n,r,v,t,s;
+	CTuple3 l,n,r,v,t,s,ht;
 	CRay shadow_ray,rray,tray;
 	int shadow_shape;
-	CTuple3 shadow_point;
+	CTuple3 shadow_point, hall_factor;
 	float shadow_distance;
 	float product;
-	float eita_inv;
+	float eita_inv,eita2,eita1;
 	float temp_float;
 	float cos_sita1, cos_sita2;
 	bool has_ambient, has_diffuse, has_reflect;
@@ -116,11 +142,17 @@ void RayTrace(CRay &view_ray, CTuple3& total_color, int depth)
 			//we should suppose here that a light source has equal reflect and diffuse I.
 			vsect  = g_shapes[sect_shape]->m_material.m_reflect;
 			color = color + vsect;
-			//vsect  = g_shapes[sect_shape]->m_material.m_diffuse;
-			//color = color + vsect;
+			
+			//color.SetValue(0.0,0.0,0.0);
+			
 		}
 		else
 		{
+			if(fabs(current_x)<0.2 && fabs(current_y)<0.2)
+			{
+				n=n;
+			}
+
 			g_shapes[sect_shape]->calcPlane(sect_point, n);
 			if(result==-1)
 				n = n * (-1);
@@ -137,8 +169,13 @@ void RayTrace(CRay &view_ray, CTuple3& total_color, int depth)
 					vsect  = g_shapes[sect_shape]->m_material.m_ambient;
 					color = color + (vlight & vsect);
 #endif
+
+#ifdef ENABLE_PHONG
 					if(g_shapes[sect_shape]->m_material.m_reflect.all_zero() && g_shapes[sect_shape]->m_material.m_diffuse.all_zero())
 						continue;
+#else
+
+#endif
 
 					l = (g_shapes[i]->m_origin - sect_point);
 					l.normalize();
@@ -151,11 +188,12 @@ void RayTrace(CRay &view_ray, CTuple3& total_color, int depth)
 					
 					//determine shadows
 					
-					if(shadow_intersect(shadow_ray, i))
-						continue;
+					shadow_result = shadow_intersect(shadow_ray, sect_shape, i, hall_factor);
 					
-
-
+					
+#ifdef ENABLE_PHONG
+					if(shadow_result!=0)
+						continue;
 #ifdef ENABLE_DIFFUSE
 					//calculate the diffuse light
 					if(!g_shapes[sect_shape]->m_material.m_diffuse.all_zero())
@@ -179,8 +217,58 @@ void RayTrace(CRay &view_ray, CTuple3& total_color, int depth)
 							color = color + (vlight & ( vsect * (pow(product, g_shapes[sect_shape]->m_refl_factor))));
 					}
 #endif
+#else
+					switch(shadow_result)
+					{
+					case 1:
+						continue;
+						break;
+					case 0:
+
+/*						if(g_shapes[sect_shape]->m_material.m_reflect.all_zero())
+							continue;
+*/
+						vlight = g_shapes[i]->m_material.m_reflect;
+						vsect = g_shapes[sect_shape]->m_material.m_reflect;
+						color=color + ( ( vlight & vsect) * ( n * l) );
+						break;
+					case -1:
+						//Hall diff-refraction
+						
+						if(n*l<0)
+						{
+						vlight = g_shapes[i]->m_material.m_refract;
+						vsect = hall_factor;
+						color=color + ( ( vlight & vsect) * ( - (n * l) ) );
+						}
+						
+						//Hall refraction
+						if(result>0)
+						{
+							//from outer to inner
+							eita1=g_shapes[sect_shape]->m_e_refract;
+							eita2=g_shapes[sect_shape]->m_i_refract;
+						}
+						else
+						{
+							//from outer to inner
+							eita2=g_shapes[sect_shape]->m_e_refract;
+							eita1=g_shapes[sect_shape]->m_i_refract;
+						}
+						ht= (l*eita2)+(v*eita1);
+						ht.normalize();
+						if(eita2>eita1)
+							ht=ht*(-1);
+						color=color + ( ( vlight & vsect) * ( pow ( n * ht, g_shapes[sect_shape]->m_refl_factor) ) );
+						break;
+					default:
+						break;
+					}
+#endif
+
 				}
 			}
+#ifndef ENABLE_PHONG
 
 #ifdef ENABLE_TRACE_REFLECT
 			//calculate the reflect 
@@ -189,9 +277,10 @@ void RayTrace(CRay &view_ray, CTuple3& total_color, int depth)
 				s= n * ( 2 * ( n * v ) ) - v; 
 				rray.SetOrigin( sect_point + ( s * SECT_DELTA_DISTANCE ) );
 				rray.SetDirection(s);
+				s.normalize();
 				RayTrace(rray,rcolor,depth-1);
 				if(! rcolor.all_zero())
-					color = color + (rcolor & g_shapes[sect_shape]->m_material.m_reflect & g_att_reflect);
+					color = color + ( (rcolor & g_shapes[sect_shape]->m_material.m_reflect & g_att_reflect));
 			}
 			
 #endif
@@ -202,13 +291,14 @@ void RayTrace(CRay &view_ray, CTuple3& total_color, int depth)
 				eita_inv = (result > 0)? ( g_shapes[sect_shape]->m_e_refract / g_shapes[sect_shape]->m_i_refract):
 					(g_shapes[sect_shape]->m_i_refract/g_shapes[sect_shape]->m_e_refract);
 				eita_inv = -eita_inv;
-				cos_sita1 = fabs(n * v);
+				cos_sita1 = (n * v);
 				//total reflection check
-				temp_float=(1-cos_sita1*cos_sita1)*(eita_inv*eita_inv);
-				if(temp_float<=1)
+				temp_float=(1.0-cos_sita1*cos_sita1)*(eita_inv*eita_inv);
+				if(temp_float<=1.0)
 				{
-					cos_sita2 = sqrt(1-temp_float);
-					t = (v * eita_inv) - (n * (cos_sita2 + eita_inv * cos_sita1));
+					cos_sita2 = sqrt(1.0-temp_float);
+					t = (v * eita_inv) - (n * (cos_sita2 + (eita_inv * cos_sita1)));
+					t.normalize();
 					tray.SetOrigin(sect_point + ( t * SECT_DELTA_DISTANCE ) );
 					tray.SetDirection(t);
 					RayTrace(tray,tcolor,depth-1);
@@ -216,6 +306,7 @@ void RayTrace(CRay &view_ray, CTuple3& total_color, int depth)
 				}
 				
 			}
+#endif
 #endif
 		}
 	}
@@ -230,5 +321,7 @@ void RayTrace(CRay &view_ray, CTuple3& total_color, int depth)
 	OutputDebugStringA(::g_debugbuff);
 	*/
 	total_color=color;
+
+	total_color.reset_threshold(1.0);
 }
 
