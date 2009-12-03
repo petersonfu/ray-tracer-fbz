@@ -8,8 +8,8 @@
 
 
 char g_debugbuff[DBG_BUFF_LEN];
-GLint g_width = 600;
-GLint g_height = 600;
+GLint g_width = 1200;
+GLint g_height = 1200;
 int g_depth;
 int g_refresh_count;
 float* g_pixels;
@@ -46,7 +46,7 @@ void init() {
 
 	g_shape_count=0;
 
-	init_scene4();
+	init_scene6();
 		//Need to dispose here!!!!!!!!!!!!!!!
 
 	_snprintf(::g_debugbuff,DBG_BUFF_LEN,"%d shapes.\n",g_shape_count);

@@ -1,5 +1,7 @@
 #include "ShapeSphere.h"
 
+extern float sqrt(float x);
+
 CShapeSphere::CShapeSphere(void)
 {
 
@@ -28,17 +30,18 @@ int CShapeSphere::intersect(CRay &view_ray,  CTuple3 &sect_point, float &sect_di
 	float d=d_vec.metric();
 	float sita, sita1, product, d1, d2;
 	product=d_vec * view_ray.GetDirection();
+	float sum=m_radius*m_radius-d*d+product*product;
 	if(m_radius<=d)
 	{
-		sita=asin( this->m_radius/d );
+		//sita=asin( this->m_radius/d );
 		//view_ray.GetDirection().normalize();
 		if(product<=0)
 			return 0;
-		sita1=acos(product/d);
-		if(sita>sita1)
+		//sita1=acos(product/d);
+		if( sum > 0 )
 		{
-			d1= d*sin(sita1);
-			d2= product - sqrt( m_radius*m_radius-d1*d1) ;
+			//d1= d*sin(sita1);
+			d2= product - sqrt( sum ) ;
 			sect_distance=d2;
 			sect_point = this->m_origin + (view_ray.GetDirection() * d2 - d_vec);
 			return 1;
@@ -51,9 +54,9 @@ int CShapeSphere::intersect(CRay &view_ray,  CTuple3 &sect_point, float &sect_di
 	else
 	{
 		//inside the sphere
-		sita = acos ( product / d );
-		d1 = d * sin(sita);
-		d2 = product + sqrt(m_radius*m_radius-d1*d1);
+		//sita = acos ( product / d );
+		//d1 = d * sin(sita);
+		d2 = product + sqrt( sum );
 		sect_distance = d2;
 		sect_point = this->m_origin + (view_ray.GetDirection() * d2 - d_vec);
 		return -1;
