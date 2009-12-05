@@ -16,5 +16,6 @@ struct CShapeSphere :
 	virtual void drawByGlut();
 	virtual void calcPlane( CTuple3 cpoint, CTuple3& normal);
 	virtual float calcDistance ( CTuple3 point );
+	virtual bool getTextureMap(CTuple3 p, float &u, float &v);
 };
 #endif

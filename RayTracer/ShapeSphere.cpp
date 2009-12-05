@@ -8,15 +8,9 @@ CShapeSphere::CShapeSphere(void)
 }
 
 CShapeSphere::CShapeSphere(CTuple3 origin, CMaterial mat, float ref_factor, bool is_light, float i_refract, float e_refract, float radius)
+:CShapeBase(origin,mat,ref_factor,is_light,i_refract,e_refract)
 {
-	m_material=mat;
-	m_light=is_light;
 	m_radius=radius;
-	m_refl_factor=ref_factor;
-	m_light=is_light;
-	m_origin=origin;
-	m_i_refract = i_refract;
-	m_e_refract = e_refract;
 }
 
 CShapeSphere::~CShapeSphere(void)
@@ -81,4 +75,9 @@ void CShapeSphere::calcPlane( CTuple3 cpoint, CTuple3& normal )
 float CShapeSphere::calcDistance(CTuple3 point)
 {
 	return fabs((m_origin-point).metric()-m_radius);
+}
+
+bool CShapeSphere::getTextureMap( CTuple3 p, float &u, float &v )
+{
+	return true;
 }

@@ -1,5 +1,6 @@
 #include "global.h"
 
+#include "Texture.h"
 #include "ray.h"
 #include "tuples.h"
 #include "ShapeBase.h"
@@ -13,6 +14,8 @@ float current_y;
 extern int g_shape_count;
 extern CTuple3 g_att_reflect, g_att_refract;
 extern float sqrt(float x);
+extern CTexture g_textures[MAX_TEXTURES];
+extern int g_text_count;
 
 //we suppose the view angle is 90 degrees and the project screen with z=-1.0f . screen has an area of +-1.0*+-1.0
 void calcRay(int screen_x, int screen_y, CTuple3 view_point, CRay& view_ray)
@@ -122,11 +125,12 @@ void RayTrace(CRay &view_ray, CTuple3& total_color, int depth)
 		return;
 	}
 
-	int sect_shape, i, result, shadow_result;
+	int sect_shape, i, result, shadow_result, texture;
 	CTuple3 color(0.0,0.0,0.0),rcolor,tcolor;
 	CTuple3 vlight, vsect;
 	CTuple3 sect_point(0.0,0.0,0.0);
 	CTuple3 l,n,r,v,t,s,ht;
+	CTuple3 vamb,vdiff,vrefl,vrefr;
 	CRay shadow_ray,rray,tray;
 	int shadow_shape;
 	CTuple3 shadow_point, hall_factor;
@@ -135,15 +139,34 @@ void RayTrace(CRay &view_ray, CTuple3& total_color, int depth)
 	float eita_inv,eita2,eita1;
 	float temp_float;
 	float cos_sita1, cos_sita2;
+	float text_u, text_v;
 	bool has_ambient, has_diffuse, has_reflect;
 	int shape_count=g_shape_count;
 	if( result = intersect(view_ray,sect_shape,sect_point))
 	{
+		
+		vdiff = g_shapes[sect_shape]->m_material.m_diffuse;
+		vrefr = g_shapes[sect_shape]->m_material.m_refract;
+
+		texture=g_shapes[sect_shape]->m_texture;
+		if(texture<0)
+		{
+			vamb = g_shapes[sect_shape]->m_material.m_ambient;
+			vrefl = g_shapes[sect_shape]->m_material.m_reflect;
+		}
+		else
+		{
+			g_shapes[sect_shape]->getTextureMap(sect_point,text_u,text_v);
+			vrefl = g_textures[texture].getTexture(text_u,text_v);
+			vamb = vrefl * 0.1;
+		}
+
+
 		if(g_shapes[sect_shape]->m_light)
 		{
 			//we should suppose here that a light source has equal reflect and diffuse I.
-			vsect  = g_shapes[sect_shape]->m_material.m_reflect;
-			color = color + vsect;
+			
+			color = color + vrefl;
 			
 			//color.SetValue(0.0,0.0,0.0);
 			
@@ -168,8 +191,7 @@ void RayTrace(CRay &view_ray, CTuple3& total_color, int depth)
 #ifdef ENABLE_AMBIENT
 					//calculate the ambient light
 					vlight = g_shapes[i]->m_material.m_ambient;
-					vsect  = g_shapes[sect_shape]->m_material.m_ambient;
-					color = color + (vlight & vsect);
+					color = color + (vlight & vamb);
 #endif
 
 #ifdef ENABLE_PHONG
@@ -201,10 +223,9 @@ void RayTrace(CRay &view_ray, CTuple3& total_color, int depth)
 					if(!g_shapes[sect_shape]->m_material.m_diffuse.all_zero())
 					{
 						vlight = g_shapes[i]->m_material.m_diffuse;
-						vsect  = g_shapes[sect_shape]->m_material.m_diffuse;
 						product=l*n;
 						if(product>0)
-							color = color + (vlight & ( vsect * product));
+							color = color + (vlight & ( vdiff * product));
 					}
 #endif
 
@@ -213,10 +234,9 @@ void RayTrace(CRay &view_ray, CTuple3& total_color, int depth)
 					if(!g_shapes[sect_shape]->m_material.m_reflect.all_zero())
 					{
 						vlight = g_shapes[i]->m_material.m_reflect;
-						vsect  = g_shapes[sect_shape]->m_material.m_reflect;
 						product=r*v;
 						if(product>0)
-							color = color + (vlight & ( vsect * (pow(product, g_shapes[sect_shape]->m_refl_factor))));
+							color = color + (vlight & ( vrefl * (pow(product, g_shapes[sect_shape]->m_refl_factor))));
 					}
 #endif
 #else
@@ -227,21 +247,19 @@ void RayTrace(CRay &view_ray, CTuple3& total_color, int depth)
 						break;
 					case 0:
 
-						if(g_shapes[sect_shape]->m_material.m_reflect.all_zero())
+						if(vrefl.all_zero())
 							continue;
 
 						vlight = g_shapes[i]->m_material.m_reflect;
-						vsect = g_shapes[sect_shape]->m_material.m_reflect;
-						color=color + ( ( vlight & vsect) * ( n * l) );
+						color=color + ( ( vlight & vrefl) * ( n * l) );
 						break;
 					case -1:
 						//Hall diff-refraction
 						
 						if(n*l<0)
 						{
-						vlight = g_shapes[i]->m_material.m_refract;
-						vsect = hall_factor;
-						color=color + ( ( vlight & vsect) * ( - (n * l) ) );
+							vlight = g_shapes[i]->m_material.m_refract;
+							color=color + ( ( vlight & hall_factor) * ( - (n * l) ) );
 						}
 						
 						//Hall refraction
@@ -261,7 +279,7 @@ void RayTrace(CRay &view_ray, CTuple3& total_color, int depth)
 						ht.normalize();
 						if(eita2>eita1)
 							ht=ht*(-1);
-						color=color + ( ( vlight & vsect) * ( pow ( n * ht, g_shapes[sect_shape]->m_refl_factor) ) );
+						color=color + ( ( vlight & vrefr) * ( pow ( n * ht, g_shapes[sect_shape]->m_refl_factor) ) );
 						break;
 					default:
 						break;
@@ -274,7 +292,7 @@ void RayTrace(CRay &view_ray, CTuple3& total_color, int depth)
 
 #ifdef ENABLE_TRACE_REFLECT
 			//calculate the reflect 
-			if(! g_shapes[sect_shape]->m_material.m_reflect.all_zero() && result>0 )
+			if(! vrefl.all_zero() && result>0 )
 			{
 				s= n * ( 2 * ( n * v ) ) - v; 
 				rray.SetOrigin( sect_point + ( s * SECT_DELTA_DISTANCE ) );
@@ -282,13 +300,13 @@ void RayTrace(CRay &view_ray, CTuple3& total_color, int depth)
 				s.normalize();
 				RayTrace(rray,rcolor,depth-1);
 				if(! rcolor.all_zero())
-					color = color + ( (rcolor & g_shapes[sect_shape]->m_material.m_reflect & g_att_reflect));
+					color = color + ( (rcolor & vrefl & g_att_reflect));
 			}
 			
 #endif
 
 #ifdef ENABLE_TRACE_REFRACT
-			if(! g_shapes[sect_shape]->m_material.m_refract.all_zero() )
+			if(! vrefr.all_zero() )
 			{
 				eita_inv = (result > 0)? ( g_shapes[sect_shape]->m_e_refract / g_shapes[sect_shape]->m_i_refract):
 					(g_shapes[sect_shape]->m_i_refract/g_shapes[sect_shape]->m_e_refract);

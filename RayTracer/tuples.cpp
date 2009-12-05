@@ -42,9 +42,16 @@ CTuple3 CTuple3::operator & (const CTuple3 &product)
 	return CTuple3(m_x*product.m_x, m_y*product.m_y, m_z*product.m_z);
 }
 
+CTuple3 CTuple3::operator ^ (const CTuple3& p)
+{
+	return CTuple3(
+		m_y*p.m_z-m_z*p.m_y,
+		m_z*p.m_x-m_x*p.m_z,
+		m_x*p.m_y-m_y*p.m_x);
+}
+
 float CTuple3::metric()
 {
-	
 	return sqrt(m_x*m_x+m_y*m_y+m_z*m_z);
 }
 

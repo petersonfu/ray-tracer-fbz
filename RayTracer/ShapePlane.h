@@ -8,6 +8,7 @@ struct CShapePlane :
 	public CShapeBase
 {
 	CTuple3 m_normal;
+	CTuple3 m_base1,m_base2;
 
 	CShapePlane(void);
 	CShapePlane(CTuple3 origin, CMaterial mat, float ref_factor, bool is_light, float i_refract, float e_refract, CTuple3 normal);
@@ -16,5 +17,6 @@ struct CShapePlane :
 	virtual void drawByGlut();
 	virtual void calcPlane( CTuple3 cpoint, CTuple3& normal);
 	virtual float calcDistance ( CTuple3 point );
+	virtual bool getTextureMap(CTuple3 p, float &u, float &v);
 };
 #endif
