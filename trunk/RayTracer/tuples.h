@@ -15,6 +15,7 @@ struct CTuple3
 	CTuple3 operator * (const float &re);
 	CTuple3& operator = (const CTuple3& p);
 	CTuple3 operator & (const CTuple3& p);
+	CTuple3 operator ^ (const CTuple3& p);
 	void SetValue(float x,float y,float z);
 	float metric();
 	void normalize();

@@ -2,21 +2,24 @@
 
 #include "ray.h"
 #include "tuples.h"
+#include "Texture.h"
 #include "ShapeBase.h"
 #include "ShapeSphere.h"
 #include "ShapePlane.h"
 
 
 char g_debugbuff[DBG_BUFF_LEN];
-GLint g_width = 1200;
-GLint g_height = 1200;
+GLint g_width = 600;
+GLint g_height = 600;
 int g_depth;
 int g_refresh_count;
 float* g_pixels;
+CTexture g_textures[MAX_TEXTURES];
+int g_text_count=0;
 bool g_use_tracer;
 CShapeBase** g_shapes;
-int g_shape_count;
-float g_att_refl=0.5,g_att_refr=1.0;
+int g_shape_count=0;
+float g_att_refl=0.3,g_att_refr=1.0;
 CTuple3 g_att_reflect(g_att_refl,g_att_refl,g_att_refl), g_att_refract(g_att_refr,g_att_refr,g_att_refr);//1.0,1.0,1.0
 void init_scene1();
 void init_scene2();
@@ -90,6 +93,30 @@ void display() {
 					*(current_pixel++)=pixel_color.m_x;
 					*(current_pixel++)=pixel_color.m_y;
 					*(current_pixel++)=pixel_color.m_z;
+				}
+			}
+#endif
+#ifdef ENABLE_ANTIALIASE
+			current_pixel=g_pixels;
+			int anti=ENABLE_ANTIALIASE;
+			int ri,ci,rgbi;
+			for (ri=0;ri<g_height-1;ri++)
+			{
+				for(ci=0;ci<g_width-1;ci++)
+				{
+					for(rgbi=0;rgbi<3;rgbi++)
+					{
+						//right-down corner
+						*(current_pixel) = 
+							(
+								*(current_pixel)
+							+	*(current_pixel+3)
+							+	*(current_pixel+3*g_width)
+							+	*(current_pixel+3*g_width+3)
+							)/4;
+						current_pixel++;
+					}
+
 				}
 			}
 #endif

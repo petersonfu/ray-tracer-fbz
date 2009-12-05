@@ -1,4 +1,4 @@
-#include "ray.h"
+ #include "ray.h"
 #include "tuples.h"
 #include "ShapeBase.h"
 #include "ShapeSphere.h"
@@ -6,25 +6,41 @@
 
 extern CShapeBase** g_shapes;
 extern int g_shape_count;
+extern CTexture g_textures[MAX_TEXTURES];
+extern int g_text_count;
 
 void init_scene1()
 {
-	g_shapes[g_shape_count++]=new CShapeSphere( CTuple3(0.0,0.0, -1.0), 
-		CMaterial(CTuple3(1.0,1.0,1.0),CTuple3(0.1,0.1,0.1),CTuple3(0.1,0.1,0.1),CTuple3(1.0,1.0,1.0)),200.0, false,
-		1.3,1.0,
+	/*
+	g_shapes[g_shape_count++]=new CShapeSphere( CTuple3(0.0,-1.0, -1.0), 
+		CMaterial(CTuple3(1.0,1.0,1.0),CTuple3(0.1,0.1,0.1),CTuple3(0.1,0.1,0.1),CTuple3(0.0,0.0,0.0)),200.0, false,
+		1.0,1.0,
 		0.5);
+		*/
+	g_textures[g_text_count].init("D:\\texture.txt",2,2);
+	g_text_count++;
 	
+	g_shapes[g_shape_count]=new CShapePlane(
+		CTuple3(0.0,0.0,-1.0),
+		CMaterial(CTuple3(1.0,0.0,0.0),CTuple3(1.0,0.0,0.0),CTuple3(1.0,0.0,0.0),CTuple3(0.0,0.0,0.0)),1.0,false,
+		//CMaterial(CTuple3(0.0,0.0,0.0),CTuple3(0.0,0.0,0.0),CTuple3(0.0,0.0,0.0)),1.0,false,
+		1.0,1.0,
+		CTuple3(0.0,0.0,1.0));
+	g_shapes[g_shape_count]->setTexture(0);
+	g_shape_count++;
+
 	g_shapes[g_shape_count++]=new CShapeSphere(
-		CTuple3(0.0,0.0,-1.5),
+		CTuple3(0.0,0.0,1.0),
 		CMaterial(CTuple3(0.0,0.0,0.0),CTuple3(1.0,1.0,1.0),CTuple3(1.0,1.0,1.0),CTuple3(1.0,1.0,1.0)),0.0,true,
 		1.0,1.0,
 		0.001);
+	
 }
 void init_scene2()
 {
 	
 	g_shapes[g_shape_count++]=new CShapeSphere( CTuple3(0.1,0.0,-1.0),
-		CMaterial(CTuple3(1.0,0.0,0.0),CTuple3(1.0,0.0,0.0),CTuple3(1.0,0.0,0.0),CTuple3(0.0,0.0,0.0)),20.0, false,
+		CMaterial(CTuple3(1.0,0.0,0.0),CTuple3(1.0,0.0,0.0),CTuple3(1.0,0.0,0.0),CTuple3(0.0,0.0,0.0)),200.0, false,
 		1.0,1.0,
 		0.50);
 	g_shapes[g_shape_count++]=new CShapeSphere( CTuple3(-0.55,0.0, -1.0),
@@ -37,7 +53,7 @@ void init_scene2()
 		1.0,1.0,
 		0.01);
 	g_shapes[g_shape_count++]=new CShapeSphere(
-		CTuple3(-0.2,-0.6,-1.0),
+		CTuple3(-0.2,-0.6,-0.5),
 		CMaterial(CTuple3(0.1,0.1,0.1),CTuple3(0.5,0.5,0.5),CTuple3(0.5,0.5,0.5),CTuple3(0.0,0.0,0.0)),1.0,true,
 		1.0,1.0,
 		0.01);
@@ -199,12 +215,16 @@ void init_scene6()
 		0.001);
 		*/
 	
-	g_shapes[g_shape_count++]=new CShapePlane(
-		CTuple3(-3.0,0.0,-3.0),
+	g_shapes[g_shape_count]=new CShapePlane(
+		CTuple3(-3.0,0.0,-5.0),
 		CMaterial(CTuple3(0.2,0.0,0.2),CTuple3(0.2,0.0,0.2),CTuple3(0.2,0.0,0.2),CTuple3(0.0,0.0,0.0)),1.0,false,
 		//CMaterial(CTuple3(0.0,0.0,0.0),CTuple3(0.0,0.0,0.0),CTuple3(0.0,0.0,0.0)),1.0,false,
 		1.0,1.0,
 		CTuple3(0.2,0.0,1.0));
+	g_textures[g_text_count++].init("D:\\texture.txt",2,2);
+	g_shapes[g_shape_count]->setTexture(0);
+	g_shape_count++;
+
 	g_shapes[g_shape_count++]=new CShapePlane(
 		CTuple3(0.0,-1.5,0.0),
 		CMaterial(CTuple3(0.2,0.2,0.2),CTuple3(0.2,0.2,0.2),CTuple3(0.2,0.2,0.2),CTuple3(0.0,0.0,0.0)),1.0,false,
@@ -221,7 +241,7 @@ void init_scene6()
 	
 	g_shapes[g_shape_count++]=new CShapeSphere( 
 		CTuple3(0.8,0.2, -2.0), 
-		CMaterial(CTuple3(0.0,0.0,0.0),CTuple3(0.2,0.2,0.2),CTuple3(0.2,0.2,0.2),CTuple3(2.0,2.0,2.0)),200.0, false,
+		CMaterial(CTuple3(0.0,0.0,0.0),CTuple3(0.2,0.2,0.2),CTuple3(0.2,0.2,0.2),CTuple3(1.0,1.0,1.0)),200.0, false,
 		1.1,1.0,
 		0.3);
 	

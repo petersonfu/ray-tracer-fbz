@@ -9,15 +9,14 @@ CShapePlane::~CShapePlane(void)
 }
 
 CShapePlane::CShapePlane(CTuple3 origin, CMaterial mat, float ref_factor, bool is_light, float i_refract, float e_refract, CTuple3 normal)
+:CShapeBase(origin,mat,ref_factor,is_light,i_refract,e_refract)
 {
 	m_normal = normal;
-	m_origin = origin;
-	m_material = mat;
-	m_refl_factor = ref_factor;
-	m_light = is_light;
+	m_base1.SetValue(normal.m_z,0,-normal.m_x);
+	m_base2=m_base1^normal;
 	m_normal.normalize();
-	m_i_refract = i_refract;
-	m_e_refract = e_refract;
+	m_base1.normalize();
+	m_base2.normalize();
 }
 
 //note that ray should have been normalized
@@ -70,4 +69,24 @@ float CShapePlane::calcDistance ( CTuple3 point )
 {
 	CTuple3 d_vec=m_origin-point;
 	return fabs(d_vec * m_normal);
+}
+
+bool CShapePlane::getTextureMap( CTuple3 p, float &u, float &v )
+{
+	if(m_texture<0)
+		return false;
+
+	CTuple3 vec = p - m_origin;
+	float x = vec * m_base1;
+	float y = vec * m_base2;
+	float ratio = 1.0;
+	//uniform to [0.0, 1.0)
+	u = x/ratio - floor(x/ratio);
+	v = y/ratio - floor(y/ratio);
+	//deal with the float
+	if(u>=1.0)
+		u=0.999;
+	if(v>=1.0)
+		v=0.999;
+	return true;
 }
