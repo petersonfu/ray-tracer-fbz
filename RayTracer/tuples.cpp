@@ -1,12 +1,12 @@
 #include "tuples.h"
 #include "global.h"
-extern float CarmSqrt(float x);
+extern DTYPE CarmSqrt(DTYPE x);
 
 CTuple3::CTuple3(void)
 {
 }
 
-CTuple3::CTuple3(float x, float y, float z)
+CTuple3::CTuple3(DTYPE x, DTYPE y, DTYPE z)
 {
 	m_x=x;
 	m_y=y;
@@ -27,12 +27,12 @@ CTuple3 CTuple3::operator + (const CTuple3 &add)
 	return CTuple3(m_x+add.m_x,m_y+add.m_y,m_z+add.m_z);
 }
 
-float CTuple3::operator * (const CTuple3 &product)
+DTYPE CTuple3::operator * (const CTuple3 &product)
 {
 	return m_x*product.m_x+m_y*product.m_y+m_z*product.m_z;
 }
 
-CTuple3 CTuple3::operator * (const float &re)
+CTuple3 CTuple3::operator * (const DTYPE &re)
 {
 	return CTuple3(m_x*re,m_y*re,m_z*re);
 }
@@ -50,12 +50,12 @@ CTuple3 CTuple3::operator ^ (const CTuple3& p)
 		m_x*p.m_y-m_y*p.m_x);
 }
 
-float CTuple3::metric()
+DTYPE CTuple3::metric()
 {
 	return sqrt(m_x*m_x+m_y*m_y+m_z*m_z);
 }
 
-void CTuple3::SetValue(float x,float y,float z)
+void CTuple3::SetValue(DTYPE x,DTYPE y,DTYPE z)
 {
 	m_x=x;
 	m_y=y;
@@ -73,10 +73,10 @@ void CTuple3::normalize()
 	if(fabs(m_z)<IGNORE_DELTA_DISTANCE)
 		m_z=0.0f;
 	*/
-	float a=metric();
+	DTYPE a=metric();
 	if(a==0.0)
 		return;
-	float met=(1/a);
+	DTYPE met=(1/a);
 	m_x = m_x * met;
 	m_y = m_y * met;
 	m_z = m_z * met;
@@ -108,7 +108,7 @@ CTuple3 CTuple3::find_face()
 	return result;
 }
 
-void CTuple3::reset_threshold(float threshold)
+void CTuple3::reset_threshold(DTYPE threshold)
 {
 	if(m_x>threshold)
 		m_x=threshold;

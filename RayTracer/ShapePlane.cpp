@@ -8,7 +8,7 @@ CShapePlane::~CShapePlane(void)
 {
 }
 
-CShapePlane::CShapePlane(CTuple3 origin, CMaterial mat, float ref_factor, bool is_light, float i_refract, float e_refract, CTuple3 normal)
+CShapePlane::CShapePlane(CTuple3 origin, CMaterial mat, DTYPE ref_factor, bool is_light, DTYPE i_refract, DTYPE e_refract, CTuple3 normal)
 :CShapeBase(origin,mat,ref_factor,is_light,i_refract,e_refract)
 {
 	m_normal = normal;
@@ -20,16 +20,16 @@ CShapePlane::CShapePlane(CTuple3 origin, CMaterial mat, float ref_factor, bool i
 }
 
 //note that ray should have been normalized
-int CShapePlane::intersect(CRay &view_ray,  CTuple3 &sect_point, float &sect_distance)
+int CShapePlane::intersect(CRay &view_ray,  CTuple3 &sect_point, DTYPE &sect_distance)
 {
-	float product = view_ray.GetDirection() * m_normal ;
+	DTYPE product = view_ray.GetDirection() * m_normal ;
 	if(product == 0)
 		return 0;
 	else
 	{
 		CTuple3 d_vec=m_origin-view_ray.GetOrigin();
-		float d=d_vec.metric();
-		float product1 = d_vec * m_normal ;
+		DTYPE d=d_vec.metric();
+		DTYPE product1 = d_vec * m_normal ;
 		if( product1 == 0)
 		{
 			return 0;
@@ -65,25 +65,25 @@ void CShapePlane::calcPlane(  CTuple3 cpoint, CTuple3& normal )
 {
 	normal  = m_normal;// normal has been normalized
 }
-float CShapePlane::calcDistance ( CTuple3 point )
+DTYPE CShapePlane::calcDistance ( CTuple3 point )
 {
 	CTuple3 d_vec=m_origin-point;
 	return fabs(d_vec * m_normal);
 }
 
-bool CShapePlane::getTextureMap( CTuple3 p, float &u, float &v )
+bool CShapePlane::getTextureMap( CTuple3 p, DTYPE &u, DTYPE &v )
 {
 	if(m_texture<0)
 		return false;
 
 	CTuple3 vec = p - m_origin;
-	float x = vec * m_base1;
-	float y = vec * m_base2;
-	float ratio = 1.0;
+	DTYPE x = vec * m_base1;
+	DTYPE y = vec * m_base2;
+	DTYPE ratio = 1.0;
 	//uniform to [0.0, 1.0)
 	u = x/ratio - floor(x/ratio);
 	v = y/ratio - floor(y/ratio);
-	//deal with the float
+	//deal with the DTYPE
 	if(u>=1.0)
 		u=0.999;
 	if(v>=1.0)

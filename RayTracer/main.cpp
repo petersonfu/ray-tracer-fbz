@@ -19,7 +19,7 @@ int g_text_count=0;
 bool g_use_tracer;
 CShapeBase** g_shapes;
 int g_shape_count=0;
-float g_att_refl=0.3,g_att_refr=1.0;
+DTYPE g_att_refl=0.3,g_att_refr=1.0;
 CTuple3 g_att_reflect(g_att_refl,g_att_refl,g_att_refl), g_att_refract(g_att_refr,g_att_refr,g_att_refr);//1.0,1.0,1.0
 void init_scene1();
 void init_scene2();
@@ -90,9 +90,9 @@ void display() {
 				{
 					calcRay(j, i, view_point, view_ray);
 					RayTrace(view_ray, pixel_color, g_depth); //depth here
-					*(current_pixel++)=pixel_color.m_x;
-					*(current_pixel++)=pixel_color.m_y;
-					*(current_pixel++)=pixel_color.m_z;
+					*(current_pixel++)=(float) pixel_color.m_x;
+					*(current_pixel++)=(float) pixel_color.m_y;
+					*(current_pixel++)=(float) pixel_color.m_z;
 				}
 			}
 #endif
@@ -120,6 +120,7 @@ void display() {
 				}
 			}
 #endif
+			//change to float
 			_snprintf(::g_debugbuff,DBG_BUFF_LEN,"Execution time: %d ms, %d*%d.\n",GetTickCount() - nPretimer, g_width, g_height);
 			OutputDebugStringA(::g_debugbuff);
 		}

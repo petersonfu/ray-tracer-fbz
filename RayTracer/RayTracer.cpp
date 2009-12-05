@@ -9,19 +9,19 @@ extern char g_debugbuff[DBG_BUFF_LEN];
 extern CShapeBase** g_shapes;
 extern GLint g_width;
 extern GLint g_height;
-float current_x;
-float current_y;
+DTYPE current_x;
+DTYPE current_y;
 extern int g_shape_count;
 extern CTuple3 g_att_reflect, g_att_refract;
-extern float sqrt(float x);
+extern DTYPE sqrt(DTYPE x);
 extern CTexture g_textures[MAX_TEXTURES];
 extern int g_text_count;
 
 //we suppose the view angle is 90 degrees and the project screen with z=-1.0f . screen has an area of +-1.0*+-1.0
 void calcRay(int screen_x, int screen_y, CTuple3 view_point, CRay& view_ray)
 {
-	float xfloat= -1.0 + (float)screen_x/(float)g_width * 2.0;
-	float yfloat= -1.0 + (float)screen_y/(float)g_width * 2.0;
+	DTYPE xfloat= -1.0 + (DTYPE)screen_x/(DTYPE)g_width * 2.0;
+	DTYPE yfloat= -1.0 + (DTYPE)screen_y/(DTYPE)g_width * 2.0;
 	current_x=xfloat;
 	current_y=yfloat;
 #ifndef PLANE_PROJECTION
@@ -39,7 +39,7 @@ void calcRay(int screen_x, int screen_y, CTuple3 view_point, CRay& view_ray)
 int intersect(CRay view_ray, int &sect_shape, CTuple3 &sect_point)
 {
 	int i;
-	float min_distance=INF_DISTANCE, distance;
+	DTYPE min_distance=INF_DISTANCE, distance;
 	int min_shape=-1, shape=-1;
 	int result=0, min_result;
 	int shape_count=g_shape_count;
@@ -82,11 +82,11 @@ int shadow_intersect(CRay shadow_ray, int start_shape, int light, CTuple3 &hall_
 {
 	int i;
 	bool find_trans=false;
-	float source_distance = g_shapes[light]->calcDistance(shadow_ray.m_origin);
+	DTYPE source_distance = g_shapes[light]->calcDistance(shadow_ray.m_origin);
 	int result;
 	CTuple3 point;
 	CTuple3 refr_factor;
-	float distance;
+	DTYPE distance;
 	int shape_count=g_shape_count;
 	for(i=0;i<shape_count;i++)
 	{
@@ -134,12 +134,12 @@ void RayTrace(CRay &view_ray, CTuple3& total_color, int depth)
 	CRay shadow_ray,rray,tray;
 	int shadow_shape;
 	CTuple3 shadow_point, hall_factor;
-	float shadow_distance;
-	float product;
-	float eita_inv,eita2,eita1;
-	float temp_float;
-	float cos_sita1, cos_sita2;
-	float text_u, text_v;
+	DTYPE shadow_distance;
+	DTYPE product;
+	DTYPE eita_inv,eita2,eita1;
+	DTYPE temp_float;
+	DTYPE cos_sita1, cos_sita2;
+	DTYPE text_u, text_v;
 	bool has_ambient, has_diffuse, has_reflect;
 	int shape_count=g_shape_count;
 	if( result = intersect(view_ray,sect_shape,sect_point))

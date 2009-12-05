@@ -13,7 +13,7 @@ struct CTexture
 	~CTexture(void);
 	void init(const char *texture_file, int width, int height);
 	void reset();
-	CTuple3 getTexture(float u, float v);
+	CTuple3 getTexture(DTYPE u, DTYPE v);
 };
 
 #endif
