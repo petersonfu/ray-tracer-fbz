@@ -1,4 +1,4 @@
- #include "ray.h"
+#include "ray.h"
 #include "tuples.h"
 #include "ShapeBase.h"
 #include "ShapeSphere.h"
@@ -147,8 +147,8 @@ void init_scene4()
 		0.3);
 	
 	
-	for ( float i=-0.6; i<=0.6; i+=0.3)
-		for ( float j=-0.6; j<=0.6; j+=0.3)
+	for ( DTYPE i=-0.6; i<=0.6; i+=0.3)
+		for ( DTYPE j=-0.6; j<=0.6; j+=0.3)
 			g_shapes[g_shape_count++]=new CShapeSphere( 
 				CTuple3(i,j, -2.0), 
 				CMaterial(CTuple3(0.0,1.0,1.0),CTuple3(0.0,1.0,1.0),CTuple3(0.0,1.0,1.0),CTuple3(0.0,0.0,0.0)),200.0, false,
@@ -221,7 +221,7 @@ void init_scene6()
 		//CMaterial(CTuple3(0.0,0.0,0.0),CTuple3(0.0,0.0,0.0),CTuple3(0.0,0.0,0.0)),1.0,false,
 		1.0,1.0,
 		CTuple3(0.2,0.0,1.0));
-	g_textures[g_text_count++].init("D:\\texture.txt",2,2);
+	g_textures[g_text_count++].init("D:\\tsinghua.txt",86,86);
 	g_shapes[g_shape_count]->setTexture(0);
 	g_shape_count++;
 
@@ -251,9 +251,9 @@ void init_scene6()
 		1.1,1.0,
 		0.5);
 	int odd=false;
-	for ( float i=-1.2; i<=2.0; i+=0.8)
+	for ( DTYPE i=-1.2; i<=2.0; i+=0.8)
 	{
-		for ( float j=-1.0; j<=1.0; j+=0.5)
+		for ( DTYPE j=-1.0; j<=1.0; j+=0.5)
 		{
 			g_shapes[g_shape_count++]=new CShapeSphere( 
 				CTuple3(i,j, -3.0), 

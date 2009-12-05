@@ -7,15 +7,15 @@
 struct CShapeSphere :
 	public CShapeBase
 {
-	float m_radius;
+	DTYPE m_radius;
 
 	CShapeSphere(void);
-	CShapeSphere::CShapeSphere(CTuple3 origin, CMaterial mat, float ref_factor, bool is_light, float i_refract, float e_refract, float radius);
+	CShapeSphere::CShapeSphere(CTuple3 origin, CMaterial mat, DTYPE ref_factor, bool is_light, DTYPE i_refract, DTYPE e_refract, DTYPE radius);
 	~CShapeSphere(void);
-	virtual int intersect( CRay& view_ray, CTuple3 &sect_point, float &sect_distace );
+	virtual int intersect( CRay& view_ray, CTuple3 &sect_point, DTYPE &sect_distace );
 	virtual void drawByGlut();
 	virtual void calcPlane( CTuple3 cpoint, CTuple3& normal);
-	virtual float calcDistance ( CTuple3 point );
-	virtual bool getTextureMap(CTuple3 p, float &u, float &v);
+	virtual DTYPE calcDistance ( CTuple3 point );
+	virtual bool getTextureMap(CTuple3 p, DTYPE &u, DTYPE &v);
 };
 #endif

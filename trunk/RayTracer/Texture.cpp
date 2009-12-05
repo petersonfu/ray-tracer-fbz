@@ -32,7 +32,7 @@ void CTexture::reset()
 void CTexture::init(const char *textfile_name, int width, int height)
 {
 	int r,c;
-	float rv,gv,bv;
+	DTYPE rv,gv,bv;
 	
 	reset();
 
@@ -65,7 +65,7 @@ void CTexture::init(const char *textfile_name, int width, int height)
 /*
 we suppose u and v are [0.0,1.0) here.
 */
-CTuple3 CTexture::getTexture(float u, float v)
+CTuple3 CTexture::getTexture(DTYPE u, DTYPE v)
 {
 	if(m_assigned)
 	{

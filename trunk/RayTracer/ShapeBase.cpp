@@ -9,12 +9,12 @@ CShapeBase::~CShapeBase(void)
 {
 }
 
-CShapeBase::CShapeBase(CTuple3 origin, CMaterial mat, float ref_factor, bool is_light, float i_refract, float e_refract)
+CShapeBase::CShapeBase(CTuple3 origin, CMaterial mat, DTYPE ref_factor, bool is_light, DTYPE i_refract, DTYPE e_refract)
 {
 	init(origin,mat,ref_factor,is_light,i_refract,e_refract);
 }
 
-void CShapeBase::init(CTuple3 origin, CMaterial mat, float ref_factor, bool is_light, float i_refract, float e_refract)
+void CShapeBase::init(CTuple3 origin, CMaterial mat, DTYPE ref_factor, bool is_light, DTYPE i_refract, DTYPE e_refract)
 {
 	m_texture=-1;
 	m_origin = origin;

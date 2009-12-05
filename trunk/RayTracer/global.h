@@ -32,3 +32,4 @@
 //#define PLANE_PROJECTION
 //#define ENABLE_ANTIALIASE 2 //2 or 4 antialiase
 
+#define DTYPE double

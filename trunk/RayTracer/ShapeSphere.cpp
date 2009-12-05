@@ -1,13 +1,13 @@
 #include "ShapeSphere.h"
 
-extern float sqrt(float x);
+extern DTYPE sqrt(DTYPE x);
 
 CShapeSphere::CShapeSphere(void)
 {
 
 }
 
-CShapeSphere::CShapeSphere(CTuple3 origin, CMaterial mat, float ref_factor, bool is_light, float i_refract, float e_refract, float radius)
+CShapeSphere::CShapeSphere(CTuple3 origin, CMaterial mat, DTYPE ref_factor, bool is_light, DTYPE i_refract, DTYPE e_refract, DTYPE radius)
 :CShapeBase(origin,mat,ref_factor,is_light,i_refract,e_refract)
 {
 	m_radius=radius;
@@ -18,13 +18,13 @@ CShapeSphere::~CShapeSphere(void)
 }
 
 //note that ray should have been normalized
-int CShapeSphere::intersect(CRay &view_ray,  CTuple3 &sect_point, float &sect_distance)
+int CShapeSphere::intersect(CRay &view_ray,  CTuple3 &sect_point, DTYPE &sect_distance)
 {
 	CTuple3 d_vec=this->m_origin-view_ray.GetOrigin();
-	float d=d_vec.metric();
-	float sita, sita1, product, d1, d2;
+	DTYPE d=d_vec.metric();
+	DTYPE sita, sita1, product, d1, d2;
 	product=d_vec * view_ray.GetDirection();
-	float sum=m_radius*m_radius-d*d+product*product;
+	DTYPE sum=m_radius*m_radius-d*d+product*product;
 	if(m_radius<=d)
 	{
 		//sita=asin( this->m_radius/d );
@@ -72,12 +72,12 @@ void CShapeSphere::calcPlane( CTuple3 cpoint, CTuple3& normal )
 	normal  = (cpoint - m_origin);
 	normal.normalize();
 }
-float CShapeSphere::calcDistance(CTuple3 point)
+DTYPE CShapeSphere::calcDistance(CTuple3 point)
 {
 	return fabs((m_origin-point).metric()-m_radius);
 }
 
-bool CShapeSphere::getTextureMap( CTuple3 p, float &u, float &v )
+bool CShapeSphere::getTextureMap( CTuple3 p, DTYPE &u, DTYPE &v )
 {
 	return true;
 }
