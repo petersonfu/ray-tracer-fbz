@@ -13,4 +13,14 @@ struct CBox
 	~CBox(void);
 };
 
+struct CTraceRecord
+{
+	bool m_sected;
+	int m_sect_result;
+	CTuple3 m_spoint;
+	float m_distance;
+	int m_box_x,m_box_y,m_box_z;
+	CTraceRecord();
+	~CTraceRecord();
+};
 #endif

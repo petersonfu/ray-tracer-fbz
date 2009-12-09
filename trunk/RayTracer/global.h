@@ -17,8 +17,8 @@ using namespace std;
 #define SHAPE_COUNT 410
 
 #define SECT_MIN_DISTANCE 0.01f
-#define SECT_DELTA_DISTANCE 0.001f
-#define IGNORE_DELTA_DISTANCE 0.001f
+#define SECT_DELTA_DISTANCE 0.0001f
+#define IGNORE_DELTA_DISTANCE 0.0001f
 
 #define ENABLE_AMBIENT
 
@@ -35,7 +35,7 @@ using namespace std;
 #define PLANE_PROJECTION
 //#define ENABLE_ANTIALIASE 2 //2 or 4 antialiase
 
-#define DTYPE float
+#define DTYPE double
 
 //3dda
 //#define ENABLE_3DDA
@@ -45,11 +45,12 @@ using namespace std;
 #define X_BOUND 4.5f
 #define Y_BOUND 4.0f
 #define Z_BOUND 4.0f
-#define GRID_SIZE 15
+#define GRID_SIZE 31
 */
 /*scene8*/
+
 #define X_BOUND 1.0f
 #define Y_BOUND 1.0f
 #define Z_BOUND 2.0f
-#define GRID_SIZE 10
+#define GRID_SIZE 20
 

@@ -16,3 +16,13 @@ void CBox::init( CTuple3 left_down, CTuple3 right_up, int x, int y, int z )
 	m_yi=y;
 	m_zi=z;
 }
+
+CTraceRecord::~CTraceRecord()
+{
+
+}
+
+CTraceRecord::CTraceRecord()
+{
+	m_sected=false;
+}
