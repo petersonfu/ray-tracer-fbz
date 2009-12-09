@@ -20,6 +20,8 @@ extern CBox g_box_list[GRID_SIZE][GRID_SIZE][GRID_SIZE];
 extern CTuple3 g_leftdown,g_rightup;
 extern CTuple3 g_delta;
 extern void find_grid(CTuple3 point, int &xi, int &yi, int &zi);
+extern long shadow_intersect_count;
+CTraceRecord rec[SHAPE_COUNT];
 
 //we suppose the view angle is 90 degrees and the project screen with z=-1.0f . screen has an area of +-1.0*+-1.0
 void calcRay(int screen_x, int screen_y, CTuple3 view_point, CRay& view_ray)
@@ -119,7 +121,7 @@ int intersect(CRay view_ray, int &sect_shape, CTuple3 &sect_point)
 #else
 	//1.find the view point grid
 	int cur_x,cur_y,cur_z,chk_x,chk_y,chk_z;
-	//CTraceRecord rec[SHAPE_COUNT];
+	//
 	CTuple3 cur_point=view_ray.m_origin;
 	find_grid(cur_point,cur_x,cur_y,cur_z);
 
@@ -128,6 +130,9 @@ int intersect(CRay view_ray, int &sect_shape, CTuple3 &sect_point)
 	DTYPE min_distance=INF_DISTANCE, distance;
 	int min_shape, shape;
 	int result, min_result;
+	
+	for(i=0;i<g_shape_count;i++)
+		rec[i].m_sected=false;
 
 	while(cur_x>=0 && cur_x<GRID_SIZE
 		&& cur_y>=0 && cur_y<GRID_SIZE
@@ -141,7 +146,7 @@ int intersect(CRay view_ray, int &sect_shape, CTuple3 &sect_point)
 		for(it=g_box_list[cur_x][cur_y][cur_z].m_shapes.begin();it!=g_box_list[cur_x][cur_y][cur_z].m_shapes.end();it++)
 		{
 			i=(*it);
-			/*
+			
 			if(rec[i].m_sected)
 			{
 				//has been tested
@@ -179,8 +184,8 @@ int intersect(CRay view_ray, int &sect_shape, CTuple3 &sect_point)
 					min_point=point;
 				}
 			}
-			*/
 			
+			/*
 			if(result=(g_shapes[i]->intersect(view_ray, point, distance)))
 			{
 				//check if the sect point is in current grid!!!
@@ -196,10 +201,7 @@ int intersect(CRay view_ray, int &sect_shape, CTuple3 &sect_point)
 					}
 				}
 			}
-			
-			
-			
-			
+			*/
 		}
 		if(min_shape!=-1)
 		{
@@ -228,6 +230,7 @@ returns:
 */
 int shadow_intersect(CRay shadow_ray, int start_shape, int light, CTuple3 &hall_factor)
 {
+#ifndef ENABLE_3DDA
 	int i;
 	bool find_trans=false;
 	DTYPE source_distance = g_shapes[light]->calcDistance(shadow_ray.m_origin);
@@ -240,6 +243,7 @@ int shadow_intersect(CRay shadow_ray, int start_shape, int light, CTuple3 &hall_
 	{
 		if(i==light) 
 			continue;
+		shadow_intersect_count++;
 		if(result=(g_shapes[i]->intersect(shadow_ray, point, distance)))
 		{
 			if(distance < source_distance)// && distance>SECT_MIN_DISTANCE)
@@ -263,6 +267,102 @@ int shadow_intersect(CRay shadow_ray, int start_shape, int light, CTuple3 &hall_
 		return -1;
 	else
 		return 0;
+#else
+	CTuple3 refr_factor;
+	bool find_trans=false;
+
+	//1.find the view point grid
+	int cur_x,cur_y,cur_z,chk_x,chk_y,chk_z;
+	//
+	CTuple3 cur_point=shadow_ray.m_origin;
+	find_grid(cur_point,cur_x,cur_y,cur_z);
+
+	int i;
+	list<int>::iterator it;
+	DTYPE min_distance=INF_DISTANCE, distance;
+	int min_shape, shape;
+	int result, min_result;
+
+	for(i=0;i<g_shape_count;i++)
+		rec[i].m_sected=false;
+
+	while(cur_x>=0 && cur_x<GRID_SIZE
+		&& cur_y>=0 && cur_y<GRID_SIZE
+		&& cur_z>=0 && cur_z<GRID_SIZE)
+	{
+		//2. search current grid
+		min_shape=-1;
+		shape=-1;
+		result=0;
+		CTuple3 min_point, point;
+		for(it=g_box_list[cur_x][cur_y][cur_z].m_shapes.begin();it!=g_box_list[cur_x][cur_y][cur_z].m_shapes.end();it++)
+		{
+			i=(*it);
+
+			if(rec[i].m_sected)
+			{
+				//has been tested
+				result=rec[i].m_sect_result;
+				distance=rec[i].m_distance;
+				chk_x=rec[i].m_box_x;
+				chk_y=rec[i].m_box_y;
+				chk_z=rec[i].m_box_z;
+				point=rec[i].m_spoint;
+			}
+			else
+			{
+				shadow_intersect_count++;
+				result=(g_shapes[i]->intersect(shadow_ray, point, distance));
+				//check if the sect point is in current grid!!!
+				rec[i].m_sected=true;
+				rec[i].m_sect_result=result;
+				if(result!=0)
+				{
+					find_grid(point,chk_x,chk_y,chk_z);
+					rec[i].m_box_x=chk_x;
+					rec[i].m_box_y=chk_y;
+					rec[i].m_box_z=chk_z;
+					rec[i].m_spoint=point;
+					rec[i].m_distance=distance;
+				}
+			}
+
+			if(result!=0 && cur_x==chk_x && cur_y==chk_y && cur_z==chk_z)
+			{
+				if(distance < min_distance)
+				{
+					min_distance=distance;
+					min_shape=i;
+					min_result=result;
+					min_point=point;
+				}
+			}
+		}
+		if(min_shape!=-1)
+		{
+			refr_factor = g_shapes[i]->m_material.m_refract;
+			
+			if(min_shape==light)
+			{
+				return (find_trans)?(-1):0;
+			}
+			else if(min_shape!=start_shape || refr_factor.all_zero())
+				return 1;
+			else
+			{
+				//hit self and it's transparent
+				find_trans=true;
+				hall_factor=refr_factor;
+			}
+		}
+		else
+		{
+			//go to next cell
+			getNextBox(shadow_ray.m_direction, cur_point,cur_x,cur_y,cur_z,cur_point,cur_x,cur_y,cur_z);
+		}
+	}
+	return 0;
+#endif
 }
 
 void RayTrace(CRay &view_ray, CTuple3& total_color, int depth)

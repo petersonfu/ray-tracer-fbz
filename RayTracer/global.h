@@ -38,7 +38,7 @@ using namespace std;
 #define DTYPE double
 
 //3dda
-//#define ENABLE_3DDA
+#define ENABLE_3DDA
 #define INF_BOUNDARY 100.0f
 /*scene6*/
 /*

@@ -11,8 +11,9 @@
 //vars for debug
 char g_debugbuff[DBG_BUFF_LEN];
 int g_refresh_count;
-long intersect_count=0;
 
+long intersect_count=0;
+long shadow_intersect_count=0;
 //vars for storage
 float* g_pixels;
 GLint g_width = 600;
@@ -208,7 +209,7 @@ void display() {
 			}
 #endif
 			//change to float
-			_snprintf(::g_debugbuff,DBG_BUFF_LEN,"Execution time: %d ms, %d*%d, %d intersects.\n",GetTickCount() - nPretimer, g_width, g_height,intersect_count);
+			_snprintf(::g_debugbuff,DBG_BUFF_LEN,"Execution time: %d ms, %d*%d, %d intersects(%d shadow intersects).\n",GetTickCount() - nPretimer, g_width, g_height,intersect_count,shadow_intersect_count);
 			OutputDebugStringA(::g_debugbuff);
 		}
 
