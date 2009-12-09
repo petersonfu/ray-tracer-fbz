@@ -19,9 +19,9 @@ void CTexture::reset()
 {
 	if(m_assigned)
 	{
-		int c;
-		for(c=0;c<m_width;c++)
-			delete [] (m_rgb[c]);
+		int r;
+		for(r=0;r<m_height;r++)
+			delete [] (m_rgb[4]);
 		delete []m_rgb;
 		m_height=0;
 		m_width=0;
@@ -39,10 +39,10 @@ void CTexture::init(const char *textfile_name, int width, int height)
 	m_height=height;
 	m_width=width;
 	
-	m_rgb=new CTuple3* [m_width];
-	for(c=0;c<m_width;c++)
+	m_rgb=new CTuple3* [m_height];
+	for(r=0;r<m_height;r++)
 	{
-		m_rgb[c]=new CTuple3 [m_height];
+		m_rgb[r]=new CTuple3 [m_width];
 	}
 
 
@@ -50,12 +50,12 @@ void CTexture::init(const char *textfile_name, int width, int height)
 	read_file.open(textfile_name);
 	assert(read_file.is_open());
 
-	for(c=0;c<m_width;c++)
-		for(r=0;r<m_height;r++)
+	for(r=0;r<m_height;r++)
+		for(c=0;c<m_width;c++)
 		{
 			assert(read_file.good());
 			read_file >>rv >>gv >>bv;
-			m_rgb[c][r].SetValue(rv,gv,bv);
+			m_rgb[r][c].SetValue(rv,gv,bv);
 		}
 	
 	m_assigned=true;
@@ -69,8 +69,8 @@ CTuple3 CTexture::getTexture(DTYPE u, DTYPE v)
 {
 	if(m_assigned)
 	{
-		int x=(int)(u*m_width);
-		int y=(int)(v*m_height);
+		int x=(int)(v*m_height);
+		int y=(int)(u*m_width);
 		return m_rgb[x][y];
 	}
 	else

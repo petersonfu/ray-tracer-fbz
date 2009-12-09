@@ -6,6 +6,7 @@
 #include "tuples.h"
 #include "material.h"
 #include "Texture.h"
+#include "Box.h"
 
 struct CShapeBase
 {
@@ -27,6 +28,8 @@ struct CShapeBase
 	virtual void calcPlane( CTuple3 cpoint, CTuple3& normal)=0;
 	virtual DTYPE calcDistance ( CTuple3 point )=0;
 	virtual bool getTextureMap(CTuple3 p, DTYPE &u, DTYPE &v)=0;
+	virtual void getBoundaryBox(CTuple3 &left_down, CTuple3 &right_up)=0;
+	virtual bool intersectBox(CBox box)=0;
 	void setTexture(int texture);
 };
 

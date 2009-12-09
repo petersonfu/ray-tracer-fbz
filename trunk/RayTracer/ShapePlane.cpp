@@ -1,5 +1,5 @@
 #include "ShapePlane.h"
-
+extern long intersect_count;
 CShapePlane::CShapePlane(void)
 {
 }
@@ -13,7 +13,7 @@ CShapePlane::CShapePlane(CTuple3 origin, CMaterial mat, DTYPE ref_factor, bool i
 {
 	m_normal = normal;
 	m_base1.SetValue(normal.m_z,0,-normal.m_x);
-	m_base2=m_base1^normal;
+	m_base2=normal^m_base1;
 	m_normal.normalize();
 	m_base1.normalize();
 	m_base2.normalize();
@@ -22,6 +22,7 @@ CShapePlane::CShapePlane(CTuple3 origin, CMaterial mat, DTYPE ref_factor, bool i
 //note that ray should have been normalized
 int CShapePlane::intersect(CRay &view_ray,  CTuple3 &sect_point, DTYPE &sect_distance)
 {
+	intersect_count++;
 	DTYPE product = view_ray.GetDirection() * m_normal ;
 	if(product == 0)
 		return 0;
@@ -88,5 +89,16 @@ bool CShapePlane::getTextureMap( CTuple3 p, DTYPE &u, DTYPE &v )
 		u=0.999;
 	if(v>=1.0)
 		v=0.999;
+	return true;
+}
+
+void CShapePlane::getBoundaryBox( CTuple3 &left_down, CTuple3 &right_up )
+{
+	left_down.SetValue(-INF_BOUNDARY,-INF_BOUNDARY,-INF_BOUNDARY);
+	right_up.SetValue(INF_BOUNDARY,INF_BOUNDARY,INF_BOUNDARY);
+}
+
+bool CShapePlane::intersectBox( CBox box )
+{
 	return true;
 }

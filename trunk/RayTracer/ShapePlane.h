@@ -18,5 +18,7 @@ struct CShapePlane :
 	virtual void calcPlane( CTuple3 cpoint, CTuple3& normal);
 	virtual DTYPE calcDistance ( CTuple3 point );
 	virtual bool getTextureMap(CTuple3 p, DTYPE &u, DTYPE &v);
+	virtual void getBoundaryBox(CTuple3 &left_down, CTuple3 &right_up);
+	virtual bool intersectBox(CBox box);
 };
 #endif
