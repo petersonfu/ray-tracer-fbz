@@ -1,7 +1,7 @@
 #include "ShapeSphere.h"
 
 extern DTYPE sqrt(DTYPE x);
-
+extern long intersect_count;
 CShapeSphere::CShapeSphere(void)
 {
 
@@ -20,9 +20,10 @@ CShapeSphere::~CShapeSphere(void)
 //note that ray should have been normalized
 int CShapeSphere::intersect(CRay &view_ray,  CTuple3 &sect_point, DTYPE &sect_distance)
 {
+	intersect_count++;
 	CTuple3 d_vec=this->m_origin-view_ray.GetOrigin();
 	DTYPE d=d_vec.metric();
-	DTYPE sita, sita1, product, d1, d2;
+	DTYPE product,  d2;
 	product=d_vec * view_ray.GetDirection();
 	DTYPE sum=m_radius*m_radius-d*d+product*product;
 	if(m_radius<=d)
@@ -78,6 +79,17 @@ DTYPE CShapeSphere::calcDistance(CTuple3 point)
 }
 
 bool CShapeSphere::getTextureMap( CTuple3 p, DTYPE &u, DTYPE &v )
+{
+	return true;
+}
+
+void CShapeSphere::getBoundaryBox( CTuple3 &left_down, CTuple3 &right_up )
+{
+	left_down = m_origin + CTuple3(-m_radius,-m_radius,-m_radius);
+	right_up = m_origin + CTuple3(m_radius,m_radius,m_radius);
+}
+
+bool CShapeSphere::intersectBox( CBox box )
 {
 	return true;
 }

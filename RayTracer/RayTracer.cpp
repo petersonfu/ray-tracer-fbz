@@ -16,6 +16,10 @@ extern CTuple3 g_att_reflect, g_att_refract;
 extern DTYPE sqrt(DTYPE x);
 extern CTexture g_textures[MAX_TEXTURES];
 extern int g_text_count;
+extern CBox g_box_list[GRID_SIZE][GRID_SIZE][GRID_SIZE];
+extern CTuple3 g_leftdown,g_rightup;
+extern CTuple3 g_delta;
+extern void find_grid(CTuple3 point, int &xi, int &yi, int &zi);
 
 //we suppose the view angle is 90 degrees and the project screen with z=-1.0f . screen has an area of +-1.0*+-1.0
 void calcRay(int screen_x, int screen_y, CTuple3 view_point, CRay& view_ray)
@@ -35,9 +39,51 @@ void calcRay(int screen_x, int screen_y, CTuple3 view_point, CRay& view_ray)
 #endif
 }
 
+void getNextBox(CTuple3 direction,
+				CTuple3 in_point, int in_x,int in_y,int in_z,
+				CTuple3 &next_point, int &next_x, int &next_y, int &next_z)
+{
+	CTuple3 target;
+	CBox *cur_box = &(g_box_list[in_x][in_y][in_z]);
+	target.m_x=(direction.m_x>0)? (cur_box->m_right_up.m_x):(cur_box->m_left_down.m_x);
+	target.m_y=(direction.m_y>0)? (cur_box->m_right_up.m_y):(cur_box->m_left_down.m_y);
+	target.m_z=(direction.m_z>0)? (cur_box->m_right_up.m_z):(cur_box->m_left_down.m_z);
+	target = target - in_point;
+	float xdis = (direction.m_x!=0.0)? (target.m_x / direction.m_x):(INF_DISTANCE);
+	float ydis = (direction.m_y!=0.0)? (target.m_y / direction.m_y):(INF_DISTANCE);
+	float zdis = (direction.m_z!=0.0)? (target.m_z / direction.m_z):(INF_DISTANCE);
+	if(xdis<=ydis && xdis<=zdis)
+	{
+		//select x change
+		next_point = in_point + (direction * xdis);
+		next_x = (direction.m_x>0) ? (in_x+1):(in_x-1);
+		next_y = in_y;
+		next_z = in_z;
+	}
+	else if(ydis<=xdis && ydis<=zdis)
+	{
+		//select x change
+		next_point = in_point + (direction * ydis);
+		next_y = (direction.m_y>0) ? (in_y+1):(in_y-1);
+		next_x = in_x;
+		next_z = in_z;
+	}
+	else if(zdis<=xdis && zdis<=xdis)
+	{
+		//select x change
+		next_point = in_point + (direction * zdis);
+		next_z = (direction.m_z>0) ? (in_z+1):(in_z-1);
+		next_y = in_y;
+		next_x = in_x;
+	}
+	return;
+	
+}
+
 //check intersect
 int intersect(CRay view_ray, int &sect_shape, CTuple3 &sect_point)
 {
+#ifndef ENABLE_3DDA
 	int i;
 	DTYPE min_distance=INF_DISTANCE, distance;
 	int min_shape=-1, shape=-1;
@@ -70,6 +116,63 @@ int intersect(CRay view_ray, int &sect_shape, CTuple3 &sect_point)
 		sect_point=view_ray.GetOrigin();
 		return 0;
 	}
+#else
+	//1.find the view point grid
+	int cur_x,cur_y,cur_z,chk_x,chk_y,chk_z;
+	CTuple3 cur_point=view_ray.m_origin;
+	find_grid(cur_point,cur_x,cur_y,cur_z);
+
+	int i;
+	list<int>::iterator it;
+	DTYPE min_distance=INF_DISTANCE, distance;
+	int min_shape, shape;
+	int result, min_result;
+
+	while(cur_x>=0 && cur_x<GRID_SIZE
+		&& cur_y>=0 && cur_y<GRID_SIZE
+		&& cur_z>=0 && cur_z<GRID_SIZE)
+	{
+		//2. search current grid
+		min_shape=-1;
+		shape=-1;
+		result=0;
+		CTuple3 min_point, point;
+		for(it=g_box_list[cur_x][cur_y][cur_z].m_shapes.begin();it!=g_box_list[cur_x][cur_y][cur_z].m_shapes.end();it++)
+		{
+			i=(*it);
+			if(result=(g_shapes[i]->intersect(view_ray, point, distance)))
+			{
+				//check if the sect point is in current grid!!!
+				find_grid(point,chk_x,chk_y,chk_z);
+				if(cur_x==chk_x && cur_y==chk_y && cur_z==chk_z)
+				{
+					if(distance < min_distance)
+					{
+						min_distance=distance;
+						min_shape=i;
+						min_result=result;
+						min_point.SetValue(point.m_x,point.m_y,point.m_z);
+					}
+				}
+			}
+		}
+		if(min_shape!=-1)
+		{
+			sect_shape=min_shape;
+			sect_point=min_point;
+			return min_result;
+		}
+		else
+		{
+			//go to next cell
+			getNextBox(view_ray.m_direction, cur_point,cur_x,cur_y,cur_z,cur_point,cur_x,cur_y,cur_z);
+		}
+	}
+	sect_shape=-1;
+	sect_point=view_ray.GetOrigin();
+	return 0;
+
+#endif
 }
 
 /*
@@ -107,7 +210,7 @@ int shadow_intersect(CRay shadow_ray, int start_shape, int light, CTuple3 &hall_
 				{
 					find_trans=true;
 					hall_factor=refr_factor;
-				}				
+				}
 			}
 		}
 	}
@@ -144,7 +247,8 @@ void RayTrace(CRay &view_ray, CTuple3& total_color, int depth)
 	int shape_count=g_shape_count;
 	if( result = intersect(view_ray,sect_shape,sect_point))
 	{
-		
+		if(sect_shape==2)
+			sect_shape=2;
 		vdiff = g_shapes[sect_shape]->m_material.m_diffuse;
 		vrefr = g_shapes[sect_shape]->m_material.m_refract;
 

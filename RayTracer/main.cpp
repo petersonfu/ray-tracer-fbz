@@ -6,21 +6,41 @@
 #include "ShapeBase.h"
 #include "ShapeSphere.h"
 #include "ShapePlane.h"
+#include "Box.h"
 
-
+//vars for debug
 char g_debugbuff[DBG_BUFF_LEN];
+int g_refresh_count;
+long intersect_count=0;
+
+//vars for storage
+float* g_pixels;
 GLint g_width = 600;
 GLint g_height = 600;
-int g_depth;
-int g_refresh_count;
-float* g_pixels;
+
+//vars for texture
 CTexture g_textures[MAX_TEXTURES];
 int g_text_count=0;
+
+//
 bool g_use_tracer;
+
+//vars for shapes
 CShapeBase** g_shapes;
 int g_shape_count=0;
+
+//vars for recursion
+int g_depth;
 DTYPE g_att_refl=0.3,g_att_refr=1.0;
 CTuple3 g_att_reflect(g_att_refl,g_att_refl,g_att_refl), g_att_refract(g_att_refr,g_att_refr,g_att_refr);//1.0,1.0,1.0
+
+//vars for 3dda
+CBox g_box_list[GRID_SIZE][GRID_SIZE][GRID_SIZE];
+CTuple3 g_leftdown(-X_BOUND,-Y_BOUND,-Z_BOUND),g_rightup(X_BOUND,Y_BOUND,Z_BOUND);
+CTuple3 g_delta;
+
+
+
 void init_scene1();
 void init_scene2();
 void init_scene3();
@@ -28,6 +48,8 @@ void init_scene4();
 void init_scene5();
 void init_scene6();
 void init_scene7();
+void init_scene8();
+
 /* Prototypes */
 void init();
 void display();
@@ -38,7 +60,67 @@ bool intersect(CRay view_ray, int &sect_shape, CTuple3 &sect_point);
 void RayTrace(CRay &view_ray, CTuple3& color, int depth);
 void calcRay(int screen_x, int screen_y, CTuple3 view_point, CRay& view_ray);
 
+void find_grid(CTuple3 point, int &xi, int &yi, int &zi)
+{
+	CTuple3 delta = point - g_leftdown;
+	xi= (int)(floor(delta.m_x/g_delta.m_x));
+	yi= (int)(floor(delta.m_y/g_delta.m_y));
+	zi= (int)(floor(delta.m_z/g_delta.m_z));
+}
 
+void setup_grids()
+{
+	int i,x,y,z;
+	CTuple3 left_down,right_up;
+	int xl,yl,zl,xu,yu,zu;
+	int shape_box_count;
+	for(i=0;i<g_shape_count;i++)
+	{
+		shape_box_count=0;
+
+		g_shapes[i]->getBoundaryBox(left_down,right_up);
+		find_grid(left_down,xl,yl,zl);
+		find_grid(right_up,xu,yu,zu);
+		
+		if(xl<0) xl=0;
+		if(yl<0) yl=0;
+		if(zl<0) zl=0;
+		if(xu>=GRID_SIZE) xu=GRID_SIZE-1;
+		if(yu>=GRID_SIZE) yu=GRID_SIZE-1;
+		if(zu>=GRID_SIZE) zu=GRID_SIZE-1;
+
+		//we need to find the grid for the 
+		for(x=xl;x<=xu;x++)
+			for(y=yl;y<=yu;y++)
+				for(z=zl;z<=zu;z++)
+				{
+					if(g_shapes[i]->intersectBox(g_box_list[x][y][z]))
+					{
+						shape_box_count++;
+						g_box_list[x][y][z].m_shapes.push_back(i);
+					}
+				}
+	//	_snprintf(::g_debugbuff,DBG_BUFF_LEN,"Shape %d: %d boxes. From (%d,%d,%d) to (%d,%d,%d).\n",i,shape_box_count,xl,yl,zl,xu,yu,zu);
+	//	OutputDebugStringA(::g_debugbuff);
+	}
+}
+void init_3dda()
+{
+	int nPretimer = GetTickCount();
+	g_delta = ( g_rightup - g_leftdown) * (1/(float)GRID_SIZE);
+	int x,y,z;
+	CTuple3 current_left_down;
+	for(x=0;x<GRID_SIZE;x++)
+		for(y=0;y<GRID_SIZE;y++)
+			for(z=0;z<GRID_SIZE;z++)
+			{
+				current_left_down =  g_leftdown + CTuple3 ( g_delta.m_x * x,g_delta.m_y * y,g_delta.m_z * z);
+				g_box_list[x][y][z].init(current_left_down, current_left_down+g_delta, x, y, z);
+			}
+	setup_grids();
+	_snprintf(::g_debugbuff,DBG_BUFF_LEN,"Init 3DDA time: %d ms. \n",GetTickCount() - nPretimer);
+	OutputDebugStringA(::g_debugbuff);
+}
 
 void init() {
 	glShadeModel( GL_FLAT );
@@ -49,11 +131,16 @@ void init() {
 
 	g_shape_count=0;
 
-	init_scene6();
-		//Need to dispose here!!!!!!!!!!!!!!!
-
+	init_scene8();
 	_snprintf(::g_debugbuff,DBG_BUFF_LEN,"%d shapes.\n",g_shape_count);
 	OutputDebugStringA(::g_debugbuff);
+
+		//Need to dispose here!!!!!!!!!!!!!!!
+#ifdef ENABLE_3DDA
+	init_3dda();
+#endif
+
+
 
 	g_depth=8;
 	g_refresh_count=0;
@@ -121,7 +208,7 @@ void display() {
 			}
 #endif
 			//change to float
-			_snprintf(::g_debugbuff,DBG_BUFF_LEN,"Execution time: %d ms, %d*%d.\n",GetTickCount() - nPretimer, g_width, g_height);
+			_snprintf(::g_debugbuff,DBG_BUFF_LEN,"Execution time: %d ms, %d*%d, %d intersects.\n",GetTickCount() - nPretimer, g_width, g_height,intersect_count);
 			OutputDebugStringA(::g_debugbuff);
 		}
 
@@ -198,7 +285,7 @@ int main( int argc, char *argv[] ) {
 	
 	glutInit( &argc, argv );
 	glutInitDisplayMode( GLUT_RGB | GLUT_DOUBLE );
-	glutInitWindowPosition( 200, 200 );
+	glutInitWindowPosition( 100, 100 );
 	glutInitWindowSize( g_width, g_height ); 
 	glutCreateWindow( argv[0] );
 	init();
