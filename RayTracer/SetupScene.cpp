@@ -221,7 +221,7 @@ void init_scene6()
 		//CMaterial(CTuple3(0.0,0.0,0.0),CTuple3(0.0,0.0,0.0),CTuple3(0.0,0.0,0.0)),1.0,false,
 		1.0,1.0,
 		CTuple3(0.1,0.0,2.0));
-	g_textures[g_text_count++].init("D:\\Projects\\ray-tracer-fbz\\Generator\\rgb.txt",16,16);
+	g_textures[g_text_count++].init("D:\\Projects\\ray-tracer-fbz\\Generator\\tsinghua.txt",201,77);
 	g_shapes[g_shape_count]->setTexture(0);
 	g_shape_count++;
 
@@ -301,21 +301,16 @@ void init_scene7()
 void init_scene8()
 {
 	g_shapes[g_shape_count++]=new CShapeSphere(
-		CTuple3(-0.8,0.3,0.8),
+		CTuple3(0.8,-0.3,-0.5),
 		CMaterial(CTuple3(0.1,0.1,0.1),CTuple3(0.5,0.5,0.5),CTuple3(0.5,0.5,0.5),CTuple3(0.0,0.0,0.0)),1.0,true,
 		1.0,1.0,
 		0.001);
 	g_shapes[g_shape_count++]=new CShapeSphere(
-		CTuple3(-0.15,0.4,0.75),
+		CTuple3(-0.3,0.4,-0.5),
 		CMaterial(CTuple3(0.1,0.1,0.1),CTuple3(0.5,0.5,0.5),CTuple3(0.5,0.5,0.5),CTuple3(0.0,0.0,0.0)),1.0,true,
 		1.0,1.0,
 		0.001);
-	/*g_shapes[g_shape_count++]=new CShapeSphere(
-	CTuple3(-0.7,0.3,0.0),
-	CMaterial(CTuple3(0.1,0.1,0.1),CTuple3(0.5,0.5,0.5),CTuple3(0.5,0.5,0.5)),1.0,true,
-	1.0,1.0,
-	0.001);
-	*/
+
 	
 	g_shapes[g_shape_count]=new CShapePlane(
 	CTuple3(0.0,0.0,-2.0),
@@ -323,41 +318,27 @@ void init_scene8()
 	//CMaterial(CTuple3(0.0,0.0,0.0),CTuple3(0.0,0.0,0.0),CTuple3(0.0,0.0,0.0)),1.0,false,
 	1.0,1.0,
 	CTuple3(0.0,0.0,1.0));
-	g_textures[g_text_count++].init("D:\\Projects\\ray-tracer-fbz\\Generator\\tsinghua.txt",201,77);
-	//g_textures[g_text_count++].init("D:\\Projects\\ray-tracer-fbz\\Generator\\rgb.txt",16,16);
+	//g_textures[g_text_count++].init("D:\\Projects\\ray-tracer-fbz\\Generator\\tsinghua.txt",201,77);
+	g_textures[g_text_count++].init("D:\\Projects\\ray-tracer-fbz\\Generator\\rgb.txt",16,16);
 	g_shapes[g_shape_count]->setTexture(0);
 	g_shape_count++;
 
-	/*g_shapes[g_shape_count++]=new CShapePlane(
-	CTuple3(0.0,-1.5,0.0),
-	CMaterial(CTuple3(0.2,0.2,0.2),CTuple3(0.2,0.2,0.2),CTuple3(0.2,0.2,0.2),CTuple3(0.0,0.0,0.0)),1.0,false,
-	//CMaterial(CTuple3(0.0,0.0,0.0),CTuple3(0.0,0.0,0.0),CTuple3(0.0,0.0,0.0)),1.0,false,
-	1.0,1.0,
-	CTuple3(0.0,1.0,0.0));
-	*/	
-	/*
-	g_shapes[g_shape_count++]=new CShapeSphere( CTuple3(0.0,0.0,-1.5),
-	CMaterial(CTuple3(1.0,1.0,1.0),CTuple3(1.0,1.0,1.0),CTuple3(1.0,1.0,1.0)),20.0, false,
-	1.0,1.0,
-	0.30);
-	*/
-
 	g_shapes[g_shape_count++]=new CShapeSphere( 
 		CTuple3(0.8,0.2, -1.0), 
-		CMaterial(CTuple3(0.0,0.0,0.0),CTuple3(0.2,0.2,0.2),CTuple3(0.2,0.2,0.2),CTuple3(1.0,1.0,1.0)),200.0, false,
-		1.1,1.0,
+		CMaterial(CTuple3(0.0,0.0,0.0),CTuple3(0.2,0.2,0.2),CTuple3(0.2,0.2,0.2),CTuple3(1.0,1.0,1.0)),20.0, false,
+		1.2,1.0,
 		0.3);
 
 	g_shapes[g_shape_count++]=new CShapeSphere( 
 		CTuple3(-0.15,-0.25, -1.0), 
-		CMaterial(CTuple3(0.0,0.0,0.0),CTuple3(0.2,0.2,0.2),CTuple3(0.2,0.2,0.2),CTuple3(3.0,3.0,3.0)),200.0, false,
+		CMaterial(CTuple3(0.0,0.0,0.0),CTuple3(0.2,0.2,0.2),CTuple3(0.2,0.2,0.2),CTuple3(1.0,1.0,1.0)),200.0, false,
 		1.1,1.0,
-		0.5);
+		0.3);
 
 	int odd=false;
-	for ( DTYPE i=-0.9; i<=0.9; i+=0.2)
+	for ( DTYPE i=-0.95; i<=0.95; i+=0.1)
 	{
-		for ( DTYPE j=-0.9; j<=0.9; j+=0.2)
+		for ( DTYPE j=-0.95; j<=0.95; j+=0.1)
 		{
 			g_shapes[g_shape_count++]=new CShapeSphere( 
 				CTuple3(i,j, -1.8), 
@@ -368,7 +349,7 @@ void init_scene8()
 				CTuple3(0.0,0.0,0.0)),
 				20000.0, false,
 				1.0,1.0,
-				0.08);
+				0.03);
 			odd=!odd;
 		}
 	}

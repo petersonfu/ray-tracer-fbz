@@ -119,6 +119,7 @@ int intersect(CRay view_ray, int &sect_shape, CTuple3 &sect_point)
 #else
 	//1.find the view point grid
 	int cur_x,cur_y,cur_z,chk_x,chk_y,chk_z;
+	//CTraceRecord rec[SHAPE_COUNT];
 	CTuple3 cur_point=view_ray.m_origin;
 	find_grid(cur_point,cur_x,cur_y,cur_z);
 
@@ -140,6 +141,46 @@ int intersect(CRay view_ray, int &sect_shape, CTuple3 &sect_point)
 		for(it=g_box_list[cur_x][cur_y][cur_z].m_shapes.begin();it!=g_box_list[cur_x][cur_y][cur_z].m_shapes.end();it++)
 		{
 			i=(*it);
+			/*
+			if(rec[i].m_sected)
+			{
+				//has been tested
+				result=rec[i].m_sect_result;
+				distance=rec[i].m_distance;
+				chk_x=rec[i].m_box_x;
+				chk_y=rec[i].m_box_y;
+				chk_z=rec[i].m_box_z;
+				point=rec[i].m_spoint;
+			}
+			else
+			{
+				result=(g_shapes[i]->intersect(view_ray, point, distance));
+				//check if the sect point is in current grid!!!
+				rec[i].m_sected=true;
+				rec[i].m_sect_result=result;
+				if(result!=0)
+				{
+					find_grid(point,chk_x,chk_y,chk_z);
+					rec[i].m_box_x=chk_x;
+					rec[i].m_box_y=chk_y;
+					rec[i].m_box_z=chk_z;
+					rec[i].m_spoint=point;
+					rec[i].m_distance=distance;
+				}
+			}
+			
+			if(result!=0 && cur_x==chk_x && cur_y==chk_y && cur_z==chk_z)
+			{
+				if(distance < min_distance)
+				{
+					min_distance=distance;
+					min_shape=i;
+					min_result=result;
+					min_point=point;
+				}
+			}
+			*/
+			
 			if(result=(g_shapes[i]->intersect(view_ray, point, distance)))
 			{
 				//check if the sect point is in current grid!!!
@@ -155,6 +196,10 @@ int intersect(CRay view_ray, int &sect_shape, CTuple3 &sect_point)
 					}
 				}
 			}
+			
+			
+			
+			
 		}
 		if(min_shape!=-1)
 		{
@@ -247,8 +292,7 @@ void RayTrace(CRay &view_ray, CTuple3& total_color, int depth)
 	int shape_count=g_shape_count;
 	if( result = intersect(view_ray,sect_shape,sect_point))
 	{
-		if(sect_shape==2)
-			sect_shape=2;
+
 		vdiff = g_shapes[sect_shape]->m_material.m_diffuse;
 		vrefr = g_shapes[sect_shape]->m_material.m_refract;
 

@@ -31,7 +31,7 @@ int g_shape_count=0;
 
 //vars for recursion
 int g_depth;
-DTYPE g_att_refl=0.3,g_att_refr=1.0;
+DTYPE g_att_refl=0.1,g_att_refr=1.0;
 CTuple3 g_att_reflect(g_att_refl,g_att_refl,g_att_refl), g_att_refract(g_att_refr,g_att_refr,g_att_refr);//1.0,1.0,1.0
 
 //vars for 3dda
@@ -285,7 +285,7 @@ int main( int argc, char *argv[] ) {
 	
 	glutInit( &argc, argv );
 	glutInitDisplayMode( GLUT_RGB | GLUT_DOUBLE );
-	glutInitWindowPosition( 100, 100 );
+	glutInitWindowPosition( 200, 200 );
 	glutInitWindowSize( g_width, g_height ); 
 	glutCreateWindow( argv[0] );
 	init();

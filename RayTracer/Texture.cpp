@@ -21,7 +21,7 @@ void CTexture::reset()
 	{
 		int r;
 		for(r=0;r<m_height;r++)
-			delete [] (m_rgb[4]);
+			delete [] (m_rgb[r]);
 		delete []m_rgb;
 		m_height=0;
 		m_width=0;
