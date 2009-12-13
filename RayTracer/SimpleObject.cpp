@@ -15,6 +15,9 @@ namespace SimpleOBJ
 		m_fXScaleH=0.0;
 		m_fYScaleH=0.0;
 		m_fZScaleH=0.0;
+		m_fXScaleL=0.0;
+		m_fYScaleL=0.0;
+		m_fZScaleL=0.0;
     }
 
     CSimpleObject::~CSimpleObject(void)
@@ -36,6 +39,9 @@ namespace SimpleOBJ
 		m_fXScaleH=0.0;
 		m_fYScaleH=0.0;
 		m_fZScaleH=0.0;
+		m_fXScaleL=0.0;
+		m_fYScaleL=0.0;
+		m_fZScaleL=0.0;
     }
 
     bool CSimpleObject::LoadFromObj(const char* fn)
@@ -212,15 +218,28 @@ namespace SimpleOBJ
             m_pVertexList = new Vec3f[m_nVertices];
             m_pTriangleList = new Array<int,3> [m_nTriangles];
 
+			m_fXScaleH=vecVertices[0].x;
+			m_fYScaleH=vecVertices[0].y;
+			m_fZScaleH=vecVertices[0].z;
+			m_fXScaleL=vecVertices[0].x;
+			m_fYScaleL=vecVertices[0].y;
+			m_fZScaleL=vecVertices[0].z;
+
             for(int i=0;i<m_nVertices;i++)
 			{
                 m_pVertexList[i] = vecVertices[i];
-				if(fabs(vecVertices[i].x)>m_fXScaleH)
-					m_fXScaleH=fabs(vecVertices[i].x);
-				if(fabs(vecVertices[i].y)>m_fYScaleH)
-					m_fYScaleH=fabs(vecVertices[i].y);
-				if(fabs(vecVertices[i].z)>m_fZScaleH)
-					m_fZScaleH=fabs(vecVertices[i].z);
+				if(vecVertices[i].x>m_fXScaleH)
+					m_fXScaleH=vecVertices[i].x;
+				if(vecVertices[i].y>m_fYScaleH)
+					m_fYScaleH=vecVertices[i].y;
+				if(vecVertices[i].z>m_fZScaleH)
+					m_fZScaleH=vecVertices[i].z;
+				if(vecVertices[i].x<m_fXScaleL)
+					m_fXScaleL=vecVertices[i].x;
+				if(vecVertices[i].y<m_fYScaleL)
+					m_fYScaleL=vecVertices[i].y;
+				if(vecVertices[i].z<m_fZScaleL)
+					m_fZScaleL=vecVertices[i].z;
 				
 			}
             for(int i=0;i<m_nTriangles;i++)
