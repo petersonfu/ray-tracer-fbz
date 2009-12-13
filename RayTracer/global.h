@@ -17,7 +17,7 @@ using namespace std;
 #define MAX_HEIGHT 800
 #define MAX_TEXTURES 10
 #define INF_DISTANCE 100.0
-#define SHAPE_COUNT 4300
+#define SHAPE_COUNT 210000
 
 #define SECT_MIN_DISTANCE 0.01f
 #define SECT_DELTA_DISTANCE 0.00001
@@ -61,5 +61,5 @@ using namespace std;
 #define X_BOUND 1.2f
 #define Y_BOUND 1.2f
 #define Z_BOUND 1.2f
-#define GRID_SIZE 5
+#define GRID_SIZE 30
 #endif
