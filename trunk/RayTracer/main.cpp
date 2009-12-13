@@ -16,8 +16,8 @@ long intersect_count=0;
 long shadow_intersect_count=0;
 //vars for storage
 float* g_pixels;
-GLint g_width = 600;
-GLint g_height = 600;
+GLint g_width = 300;
+GLint g_height = 300;
 
 //vars for texture
 CTexture g_textures[MAX_TEXTURES];
@@ -55,6 +55,7 @@ void init_scene8();
 void init_scene9();
 void init_scene10();
 void init_scene_dinosaur();
+void init_scene_dragon();
 
 /* Prototypes */
 void init();
@@ -155,7 +156,8 @@ void init() {
 	g_refresh_count=0;
 	g_pixels=new float[3*MAX_WIDTH*MAX_HEIGHT];
 
-	init_scene_dinosaur();
+//	init_scene_dinosaur();
+	init_scene_dragon();
 
 #ifdef ENABLE_3DDA
 	init_3dda();

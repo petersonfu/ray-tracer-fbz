@@ -538,3 +538,43 @@ void init_scene_dinosaur()
 		);
 		
 }
+
+void init_scene_dragon()
+{
+
+	g_textures[g_text_count].init("..\\Generator\\skin.txt",225,225);
+	LoadObjModel("..\\Models\\fandisk.18k.obj",g_text_count,0.8);
+	g_text_count++;
+
+	g_shapes[g_shape_count]=new CShapePlane(
+		CTuple3(0.0,0.0,-1.0),
+		CMaterial(CTuple3(0.2,0.0,0.2),CTuple3(0.2,0.0,0.2),CTuple3(0.2,0.0,0.2),CTuple3(0.0,0.0,0.0)),1.0,false,
+		//CMaterial(CTuple3(0.0,0.0,0.0),CTuple3(0.0,0.0,0.0),CTuple3(0.0,0.0,0.0)),1.0,false,
+		1.0,1.0,
+		CTuple3(0.0,0.0,1.0));
+	//g_textures[g_text_count++].init("D:\\Projects\\ray-tracer-fbz\\Generator\\tsinghua.txt",201,77);
+	g_textures[g_text_count].init("..\\Generator\\brick.txt",450,450);
+	g_shapes[g_shape_count]->setTexture(g_text_count);
+	g_text_count++;
+	g_shape_count++;
+
+	g_shapes[g_shape_count++]=new CShapeSphere(
+		CTuple3(0.8,-0.3,0.5),
+		CMaterial(CTuple3(0.1,0.1,0.1),CTuple3(1.0,1.0,1.0),CTuple3(1.0,1.0,1.0),CTuple3(0.0,0.0,0.0)),1.0,true,
+		1.0,1.0,
+		0.001);
+	g_shapes[g_shape_count++]=new CShapeSphere(
+		CTuple3(-0.8,0.3,0.5),
+		CMaterial(CTuple3(0.1,0.1,0.1),CTuple3(0.5,0.5,0.5),CTuple3(0.5,0.5,0.5),CTuple3(0.0,0.0,0.0)),1.0,true,
+		1.0,1.0,
+		0.001);
+
+	g_tracer_view.setView(
+		CTuple3(0.0,0.0,0.0),
+		CTuple3(-1.0,1.0,0.0),
+		CTuple3(-1.0,-1.0,0.0),
+		CTuple3(0.0,1.0,1.0),
+		TRACEVIEW_PLANE
+		);
+
+}
