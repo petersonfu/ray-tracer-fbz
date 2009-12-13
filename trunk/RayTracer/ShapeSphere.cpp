@@ -1,7 +1,7 @@
 #include "ShapeSphere.h"
 
 extern DTYPE sqrt(DTYPE x);
-extern long intersect_count;
+
 CShapeSphere::CShapeSphere(void)
 {
 
@@ -20,7 +20,7 @@ CShapeSphere::~CShapeSphere(void)
 //note that ray should have been normalized
 int CShapeSphere::intersect(CRay &view_ray,  CTuple3 &sect_point, DTYPE &sect_distance)
 {
-	intersect_count++;
+	
 	CTuple3 d_vec=this->m_origin-view_ray.GetOrigin();
 	DTYPE d=d_vec.metric();
 	DTYPE product,  d2;

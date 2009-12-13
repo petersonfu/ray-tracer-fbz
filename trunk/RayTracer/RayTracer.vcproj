@@ -194,6 +194,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ShapeCubic.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ShapeCylinder.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\ShapePlane.cpp"
 				>
 			</File>
@@ -202,11 +210,27 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ShapeTriangle.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\SimpleObject.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Texture.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\tuples.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\utiilities.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Vec3f.cpp"
 				>
 			</File>
 		</Filter>
@@ -236,6 +260,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ShapeCubic.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ShapeCylinder.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ShapePlane.h"
 				>
 			</File>
@@ -244,11 +276,23 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ShapeTriangle.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SimpleObject.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Texture.h"
 				>
 			</File>
 			<File
 				RelativePath=".\tuples.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Vec3f.h"
 				>
 			</File>
 		</Filter>

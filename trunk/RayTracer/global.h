@@ -1,3 +1,6 @@
+#ifndef __GLOBAL_H__
+#define __GLOBAL_H__
+
 #include <windows.h>
 #include <math.h>
 #include <stdlib.h>
@@ -13,12 +16,12 @@ using namespace std;
 #define MAX_WIDTH 1280
 #define MAX_HEIGHT 1280
 #define MAX_TEXTURES 10
-#define INF_DISTANCE 100.0f
-#define SHAPE_COUNT 410
+#define INF_DISTANCE 100.0
+#define SHAPE_COUNT 4300
 
 #define SECT_MIN_DISTANCE 0.01f
-#define SECT_DELTA_DISTANCE 0.0001f
-#define IGNORE_DELTA_DISTANCE 0.0001f
+#define SECT_DELTA_DISTANCE 0.00001
+#define IGNORE_DELTA_DISTANCE 0.0001
 
 #define ENABLE_AMBIENT
 
@@ -35,11 +38,11 @@ using namespace std;
 #define PLANE_PROJECTION
 //#define ENABLE_ANTIALIASE 2 //2 or 4 antialiase
 
-#define DTYPE double
+#define DTYPE float
 
 //3dda
 #define ENABLE_3DDA
-#define INF_BOUNDARY 100.0f
+#define INF_BOUNDARY 100.0
 /*scene6*/
 /*
 #define X_BOUND 4.5f
@@ -48,9 +51,15 @@ using namespace std;
 #define GRID_SIZE 31
 */
 /*scene8*/
-
+/*
 #define X_BOUND 1.0f
 #define Y_BOUND 1.0f
 #define Z_BOUND 2.0f
 #define GRID_SIZE 20
-
+*/
+/*scene9*/
+#define X_BOUND 1.0f
+#define Y_BOUND 1.0f
+#define Z_BOUND 2.0f
+#define GRID_SIZE 50
+#endif
