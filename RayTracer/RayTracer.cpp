@@ -16,9 +16,14 @@ extern CTuple3 g_att_reflect, g_att_refract;
 extern DTYPE sqrt(DTYPE x);
 extern CTexture g_textures[MAX_TEXTURES];
 extern int g_text_count;
+
+#ifdef ENABLE_3DDA
 extern CBox g_box_list[GRID_SIZE][GRID_SIZE][GRID_SIZE];
 extern CTuple3 g_leftdown,g_rightup;
 extern CTuple3 g_delta;
+#endif
+
+extern long intersect_count;
 extern void find_grid(CTuple3 point, int &xi, int &yi, int &zi);
 extern long shadow_intersect_count;
 CTraceRecord rec[SHAPE_COUNT];
@@ -40,7 +45,7 @@ void calcRay(int screen_x, int screen_y, CTuple3 view_point, CRay& view_ray)
 	view_ray.SetDirection(CTuple3(0,0,-1.0-view_point.m_z));
 #endif
 }
-
+#ifdef ENABLE_3DDA
 void getNextBox(CTuple3 direction,
 				CTuple3 in_point, int in_x,int in_y,int in_z,
 				CTuple3 &next_point, int &next_x, int &next_y, int &next_z)
@@ -81,7 +86,7 @@ void getNextBox(CTuple3 direction,
 	return;
 	
 }
-
+#endif
 //check intersect
 int intersect(CRay view_ray, int &sect_shape, CTuple3 &sect_point)
 {
@@ -95,6 +100,7 @@ int intersect(CRay view_ray, int &sect_shape, CTuple3 &sect_point)
 	CTuple3 min_point, point;
 	for(i=0;i<shape_count;i++)
 	{
+		intersect_count++;
 		if(result=(g_shapes[i]->intersect(view_ray, point, distance)))
 		{
 			if(distance < min_distance)// && distance>SECT_MIN_DISTANCE)
@@ -159,6 +165,7 @@ int intersect(CRay view_ray, int &sect_shape, CTuple3 &sect_point)
 			}
 			else
 			{
+				intersect_count++;
 				result=(g_shapes[i]->intersect(view_ray, point, distance));
 				//check if the sect point is in current grid!!!
 				rec[i].m_sected=true;

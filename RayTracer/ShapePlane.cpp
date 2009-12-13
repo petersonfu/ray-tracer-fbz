@@ -1,5 +1,5 @@
 #include "ShapePlane.h"
-extern long intersect_count;
+
 CShapePlane::CShapePlane(void)
 {
 }
@@ -22,7 +22,7 @@ CShapePlane::CShapePlane(CTuple3 origin, CMaterial mat, DTYPE ref_factor, bool i
 //note that ray should have been normalized
 int CShapePlane::intersect(CRay &view_ray,  CTuple3 &sect_point, DTYPE &sect_distance)
 {
-	intersect_count++;
+	
 	DTYPE product = view_ray.GetDirection() * m_normal ;
 	if(product == 0)
 		return 0;

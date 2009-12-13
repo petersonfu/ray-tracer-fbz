@@ -35,11 +35,12 @@ int g_depth;
 DTYPE g_att_refl=0.1,g_att_refr=1.0;
 CTuple3 g_att_reflect(g_att_refl,g_att_refl,g_att_refl), g_att_refract(g_att_refr,g_att_refr,g_att_refr);//1.0,1.0,1.0
 
+#ifdef ENABLE_3DDA
 //vars for 3dda
 CBox g_box_list[GRID_SIZE][GRID_SIZE][GRID_SIZE];
 CTuple3 g_leftdown(-X_BOUND,-Y_BOUND,-Z_BOUND),g_rightup(X_BOUND,Y_BOUND,Z_BOUND);
 CTuple3 g_delta;
-
+#endif
 
 
 void init_scene1();
@@ -50,6 +51,8 @@ void init_scene5();
 void init_scene6();
 void init_scene7();
 void init_scene8();
+void init_scene9();
+void init_scene10();
 
 /* Prototypes */
 void init();
@@ -60,6 +63,8 @@ void keyboard( unsigned char key, int x, int y );
 bool intersect(CRay view_ray, int &sect_shape, CTuple3 &sect_point);
 void RayTrace(CRay &view_ray, CTuple3& color, int depth);
 void calcRay(int screen_x, int screen_y, CTuple3 view_point, CRay& view_ray);
+
+#ifdef ENABLE_3DDA
 
 void find_grid(CTuple3 point, int &xi, int &yi, int &zi)
 {
@@ -123,6 +128,8 @@ void init_3dda()
 	OutputDebugStringA(::g_debugbuff);
 }
 
+#endif
+
 void init() {
 	glShadeModel( GL_FLAT );
 	glClearColor( 0.0, 0.0, 0.0, 1.0 );
@@ -132,9 +139,7 @@ void init() {
 
 	g_shape_count=0;
 
-	init_scene8();
-	_snprintf(::g_debugbuff,DBG_BUFF_LEN,"%d shapes.\n",g_shape_count);
-	OutputDebugStringA(::g_debugbuff);
+	init_scene10();
 
 		//Need to dispose here!!!!!!!!!!!!!!!
 #ifdef ENABLE_3DDA
@@ -209,8 +214,8 @@ void display() {
 			}
 #endif
 			//change to float
-			_snprintf(::g_debugbuff,DBG_BUFF_LEN,"Execution time: %d ms, %d*%d, %d intersects(%d shadow intersects).\n",GetTickCount() - nPretimer, g_width, g_height,intersect_count,shadow_intersect_count);
-			OutputDebugStringA(::g_debugbuff);
+			_snprintf(::g_debugbuff,DBG_BUFF_LEN,"%d ms, %d*%d, %d/%d shadow/total. %d shapes.\n",GetTickCount() - nPretimer, g_width, g_height,shadow_intersect_count,intersect_count,g_shape_count);
+			glutSetWindowTitle(g_debugbuff);
 		}
 
 		g_refresh_count++;
