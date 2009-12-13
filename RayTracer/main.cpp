@@ -7,7 +7,7 @@
 #include "ShapeSphere.h"
 #include "ShapePlane.h"
 #include "Box.h"
-
+#include "TracerView.h"
 //vars for debug
 char g_debugbuff[DBG_BUFF_LEN];
 int g_refresh_count;
@@ -25,6 +25,7 @@ int g_text_count=0;
 
 //
 bool g_use_tracer;
+CTracerView g_tracer_view;
 
 //vars for shapes
 CShapeBase** g_shapes;
@@ -53,6 +54,7 @@ void init_scene7();
 void init_scene8();
 void init_scene9();
 void init_scene10();
+void init_scene_dinosaur();
 
 /* Prototypes */
 void init();
@@ -62,7 +64,7 @@ void timer();
 void keyboard( unsigned char key, int x, int y );
 bool intersect(CRay view_ray, int &sect_shape, CTuple3 &sect_point);
 void RayTrace(CRay &view_ray, CTuple3& color, int depth);
-void calcRay(int screen_x, int screen_y, CTuple3 view_point, CRay& view_ray);
+void calcRay(int screen_x, int screen_y, CRay& view_ray);
 
 #ifdef ENABLE_3DDA
 
@@ -124,8 +126,10 @@ void init_3dda()
 				g_box_list[x][y][z].init(current_left_down, current_left_down+g_delta, x, y, z);
 			}
 	setup_grids();
+	/*
 	_snprintf(::g_debugbuff,DBG_BUFF_LEN,"Init 3DDA time: %d ms. \n",GetTickCount() - nPretimer);
 	OutputDebugStringA(::g_debugbuff);
+	*/
 }
 
 #endif
@@ -139,24 +143,30 @@ void init() {
 
 	g_shape_count=0;
 
-	init_scene10();
-
-		//Need to dispose here!!!!!!!!!!!!!!!
-#ifdef ENABLE_3DDA
-	init_3dda();
-#endif
-
-
+	g_tracer_view.setView(
+		CTuple3(0.0,0.0,0.0),
+		CTuple3(-1.0,-1.0,1.0),
+		CTuple3(1.0,-1.0,1.0),
+		CTuple3(-1.0,1.0,1.0),
+		TRACEVIEW_PLANE
+		);
 
 	g_depth=8;
 	g_refresh_count=0;
 	g_pixels=new float[3*MAX_WIDTH*MAX_HEIGHT];
+
+	init_scene_dinosaur();
+
+#ifdef ENABLE_3DDA
+	init_3dda();
+#endif
+
 }
 
 void display() {
 	
 	int i,j;
-	CTuple3 view_point(0.0,0.0,0.0), pixel_color;
+	CTuple3 pixel_color;
 	float* current_pixel=NULL;
 
 	g_width = glutGet( GLUT_WINDOW_WIDTH );
@@ -181,7 +191,7 @@ void display() {
 			{
 				for(j=0;j<g_width;j++)
 				{
-					calcRay(j, i, view_point, view_ray);
+					calcRay(j, i, view_ray);
 					RayTrace(view_ray, pixel_color, g_depth); //depth here
 					*(current_pixel++)=(float) pixel_color.m_x;
 					*(current_pixel++)=(float) pixel_color.m_y;

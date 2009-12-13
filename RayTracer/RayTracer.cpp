@@ -4,6 +4,7 @@
 #include "ray.h"
 #include "tuples.h"
 #include "ShapeBase.h"
+#include "TracerView.h"
 
 extern char g_debugbuff[DBG_BUFF_LEN];
 extern CShapeBase** g_shapes;
@@ -16,6 +17,7 @@ extern CTuple3 g_att_reflect, g_att_refract;
 extern DTYPE sqrt(DTYPE x);
 extern CTexture g_textures[MAX_TEXTURES];
 extern int g_text_count;
+extern CTracerView g_tracer_view;
 
 #ifdef ENABLE_3DDA
 extern CBox g_box_list[GRID_SIZE][GRID_SIZE][GRID_SIZE];
@@ -29,12 +31,15 @@ extern long shadow_intersect_count;
 CTraceRecord rec[SHAPE_COUNT];
 
 //we suppose the view angle is 90 degrees and the project screen with z=-1.0f . screen has an area of +-1.0*+-1.0
-void calcRay(int screen_x, int screen_y, CTuple3 view_point, CRay& view_ray)
+void calcRay(int screen_x, int screen_y, CRay& view_ray)
 {
-	DTYPE xfloat= -1.0 + (DTYPE)screen_x/(DTYPE)g_width * 2.0;
-	DTYPE yfloat= -1.0 + (DTYPE)screen_y/(DTYPE)g_width * 2.0;
+	DTYPE xfloat= (DTYPE)screen_x/(DTYPE)g_width;
+	DTYPE yfloat= (DTYPE)screen_y/(DTYPE)g_width;
 	current_x=xfloat;
 	current_y=yfloat;
+	g_tracer_view.calcRay(xfloat,yfloat,view_ray);
+
+/*
 #ifndef PLANE_PROJECTION
 	CTuple3 dir(xfloat-view_point.m_x,yfloat-view_point.m_y,-1.0-view_point.m_z);
 	dir.normalize();
@@ -44,6 +49,7 @@ void calcRay(int screen_x, int screen_y, CTuple3 view_point, CRay& view_ray)
 	view_ray.SetOrigin(CTuple3(xfloat,yfloat,view_point.m_z));
 	view_ray.SetDirection(CTuple3(0,0,-1.0-view_point.m_z));
 #endif
+*/
 }
 #ifdef ENABLE_3DDA
 void getNextBox(CTuple3 direction,

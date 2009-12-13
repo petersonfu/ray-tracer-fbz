@@ -222,6 +222,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\TracerView.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\tuples.cpp"
 				>
 			</File>
@@ -285,6 +289,10 @@
 			</File>
 			<File
 				RelativePath=".\Texture.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TracerView.h"
 				>
 			</File>
 			<File

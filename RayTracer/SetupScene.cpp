@@ -7,7 +7,7 @@
 #include "ShapeCylinder.h"
 #include "ShapeTriangle.h"
 #include "SimpleObject.h"
-
+#include "TracerView.h"
 #include <fstream>
 using namespace std;
 using namespace SimpleOBJ;
@@ -17,6 +17,7 @@ extern int g_shape_count;
 extern CTexture g_textures[MAX_TEXTURES];
 extern int g_text_count;
 extern DTYPE myMax(DTYPE a,DTYPE b,DTYPE c);
+extern CTracerView g_tracer_view;
 
 void LoadTriangleModel(const char *textfile_name, const int texture)//set texture as -1 is no texture should be assigned.
 {
@@ -46,7 +47,7 @@ void LoadTriangleModel(const char *textfile_name, const int texture)//set textur
 
 }
 
-void LoadObjModel(const char *textfile_name, const int texture)
+void LoadObjModel(const char *textfile_name, const int texture, float cubic_scale = 0.5)
 {
 	int i;
 	Array<int,3> face;
@@ -58,7 +59,7 @@ void LoadObjModel(const char *textfile_name, const int texture)
 	so.LoadFromObj(textfile_name);
 
 	//scale the object to 0.0 to -1.0 cubic
-	float scale = 1.0 / (myMax(so.m_fXScaleH, so.m_fYScaleH, so.m_fZScaleH) * 2.0);
+	float scale = cubic_scale / (myMax(so.m_fXScaleH, so.m_fYScaleH, so.m_fZScaleH));
 
 	for(i=0; i<so.m_nTriangles;i++)
 	{
@@ -69,9 +70,9 @@ void LoadObjModel(const char *textfile_name, const int texture)
 		sv1.SetValue(v1.x,v1.y,v1.z);
 		sv2.SetValue(v2.x,v2.y,v2.z);
 		sv3.SetValue(v3.x,v3.y,v3.z);
-		sv1 = sv1 * scale + shift;
-		sv2 = sv2 * scale + shift;
-		sv3 = sv3 * scale + shift;
+		sv1 = sv1 * scale;
+		sv2 = sv2 * scale;
+		sv3 = sv3 * scale;
 		g_shapes[g_shape_count]=new CShapeTriangle(
 			CMaterial(CTuple3(0.05,0.05,0.05),CTuple3(1.0,1.0,1.0),CTuple3(1.0,1.0,1.0),CTuple3(0.0,0.0,0.0)),20.0,false,
 			1.0,1.0,
@@ -488,6 +489,52 @@ void init_scene10()
 		CMaterial(CTuple3(0.1,0.1,0.1),CTuple3(0.5,0.5,0.5),CTuple3(0.5,0.5,0.5),CTuple3(0.0,0.0,0.0)),1.0,true,
 		1.0,1.0,
 		0.001);
-		
 
+	g_tracer_view.setView(
+		CTuple3(0.0,0.0,0.0),
+		CTuple3(-1.0,-1.0,1.0),
+		CTuple3(1.0,-1.0,1.0),
+		CTuple3(-1.0,1.0,1.0),
+		TRACEVIEW_PLANE
+		);
+}
+
+void init_scene_dinosaur()
+{
+
+	g_textures[g_text_count].init("..\\Generator\\skin.txt",225,225);
+	LoadObjModel("..\\Models\\dinosaur.2k.obj",g_text_count);
+	g_text_count++;
+
+	g_shapes[g_shape_count]=new CShapePlane(
+		CTuple3(0.0,0.0,-1.0),
+		CMaterial(CTuple3(0.2,0.0,0.2),CTuple3(0.2,0.0,0.2),CTuple3(0.2,0.0,0.2),CTuple3(0.0,0.0,0.0)),1.0,false,
+		//CMaterial(CTuple3(0.0,0.0,0.0),CTuple3(0.0,0.0,0.0),CTuple3(0.0,0.0,0.0)),1.0,false,
+		1.0,1.0,
+		CTuple3(0.0,0.0,1.0));
+	//g_textures[g_text_count++].init("D:\\Projects\\ray-tracer-fbz\\Generator\\tsinghua.txt",201,77);
+	g_textures[g_text_count].init("..\\Generator\\brick.txt",450,450);
+	g_shapes[g_shape_count]->setTexture(g_text_count);
+	g_text_count++;
+	g_shape_count++;
+
+	g_shapes[g_shape_count++]=new CShapeSphere(
+		CTuple3(0.8,-0.3,0.5),
+		CMaterial(CTuple3(0.1,0.1,0.1),CTuple3(1.0,1.0,1.0),CTuple3(1.0,1.0,1.0),CTuple3(0.0,0.0,0.0)),1.0,true,
+		1.0,1.0,
+		0.001);
+	g_shapes[g_shape_count++]=new CShapeSphere(
+		CTuple3(-0.8,0.3,0.5),
+		CMaterial(CTuple3(0.1,0.1,0.1),CTuple3(0.5,0.5,0.5),CTuple3(0.5,0.5,0.5),CTuple3(0.0,0.0,0.0)),1.0,true,
+		1.0,1.0,
+		0.001);
+		
+	g_tracer_view.setView(
+		CTuple3(0.0,0.0,0.0),
+		CTuple3(-1.0,1.0,0.0),
+		CTuple3(-1.0,-1.0,0.0),
+		CTuple3(0.0,1.0,1.0),
+		TRACEVIEW_PLANE
+		);
+		
 }
