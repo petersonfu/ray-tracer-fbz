@@ -59,7 +59,13 @@ void LoadObjModel(const char *textfile_name, const int texture, float cubic_scal
 	so.LoadFromObj(textfile_name);
 
 	//scale the object to 0.0 to -1.0 cubic
-	float scale = cubic_scale / (myMax(so.m_fXScaleH, so.m_fYScaleH, so.m_fZScaleH));
+	float scale = cubic_scale / (myMax(so.m_fXScaleH - so.m_fXScaleL, so.m_fYScaleH - so.m_fYScaleL, so.m_fZScaleH - so.m_fZScaleL));
+	
+	CTuple3 center;
+	center.SetValue(
+		(so.m_fXScaleH + so.m_fXScaleL)/2.0, 
+		(so.m_fYScaleH + so.m_fYScaleL)/2.0, 
+		(so.m_fZScaleH + so.m_fZScaleL)/2.0);
 
 	for(i=0; i<so.m_nTriangles;i++)
 	{
@@ -68,8 +74,11 @@ void LoadObjModel(const char *textfile_name, const int texture, float cubic_scal
 		v2 = so.m_pVertexList[face[1]];
 		v3 = so.m_pVertexList[face[2]];
 		sv1.SetValue(v1.x,v1.y,v1.z);
+		sv1 = sv1 - center;
 		sv2.SetValue(v2.x,v2.y,v2.z);
+		sv2 = sv2 - center;
 		sv3.SetValue(v3.x,v3.y,v3.z);
+		sv3 = sv3 -center;
 		sv1 = sv1 * scale;
 		sv2 = sv2 * scale;
 		sv3 = sv3 * scale;
