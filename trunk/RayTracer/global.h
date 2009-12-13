@@ -13,8 +13,8 @@ using namespace std;
 #define DBG_BUFF_LEN 100
 //#define DBG_SPECIAL
 
-#define MAX_WIDTH 1280
-#define MAX_HEIGHT 1280
+#define MAX_WIDTH 800
+#define MAX_HEIGHT 800
 #define MAX_TEXTURES 10
 #define INF_DISTANCE 100.0
 #define SHAPE_COUNT 4300
@@ -57,9 +57,9 @@ using namespace std;
 #define Z_BOUND 2.0f
 #define GRID_SIZE 20
 */
-/*scene9*/
-#define X_BOUND 1.0f
-#define Y_BOUND 1.0f
-#define Z_BOUND 2.0f
-#define GRID_SIZE 50
+/*scene_dinosaur*/
+#define X_BOUND 1.2f
+#define Y_BOUND 1.2f
+#define Z_BOUND 1.2f
+#define GRID_SIZE 5
 #endif
